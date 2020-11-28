@@ -9,4 +9,4 @@ FROM openjdk:11-slim
 WORKDIR /
 COPY --from=build /usr/src/app/target/campus-social-media-0.0.1-SNAPSHOT.jar /usr/app/config-server-0.0.1-SNAPSHOT.jar
 # EXPOSE 8888 
-CMD java -jar config-server-0.0.1-SNAPSHOT.jar --server.port=$PORT
+CMD java -jar config-server-0.0.1-SNAPSHOT.jar --server.port=$PORT --spring.cloud.config.username=$configUserName --spring.cloud.config.password=$configPassword
