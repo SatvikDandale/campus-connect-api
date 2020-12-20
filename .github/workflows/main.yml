@@ -22,11 +22,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    
-    - uses: akhileshns/heroku-deploy@v3.7.8 # This is the action
-      with:
-        heroku_api_key: ${{secrets.HEROKU__API}}
-        heroku_app_name: "campus-social-media-backend" #Must be unique in Heroku
-        heroku_email: ${{secrets.HEROKU_EMAIL}}
-        usedocker: true
-        branch: master
+    - name: Log in to container registry
+      env:
+        HEROKU_API_KEY: ${{secrets.HEROKU__API}}
+      run: heroku container:login
+    -
