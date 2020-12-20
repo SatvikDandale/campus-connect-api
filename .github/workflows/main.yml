@@ -30,3 +30,7 @@ jobs:
       env:
         HEROKU_API_KEY: ${{secrets.HEROKU__API}}
       run: heroku container:push -a campus-social-media-backend web
+    - name: Deploy
+      env:
+        HEROKU_API_KEY: ${{secrets.HEROKU__API}}
+      run: heroku container:release -a campus-social-media-backend web
