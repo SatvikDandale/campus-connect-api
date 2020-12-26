@@ -58,13 +58,15 @@ public class CollegeDomainNameController {
 	 * it takes emailId and extracts domain name from it. then verifies if any
 	 * college exists in the database with the domain name
 	 */
+	// Tested by satvik. Works fine.
 	@GetMapping("/college/{emailId}")
 	public ResponseEntity<?> findCollegeByEmailId(@PathVariable String emailId) {
+		// System.out.println(emailId);
 
 		try {
 			String[] arrOfStr = emailId.split("@");
-			String domainName = arrOfStr[arrOfStr.length];
-			System.out.println(domainName);
+			String domainName = "@" + arrOfStr[arrOfStr.length - 1];
+			// System.out.println(domainName);
 			CollegeDomainNames domainNameObj = service.getCollegeByDomainName(domainName);
 			return new ResponseEntity<>(domainNameObj.getCollegeName(), HttpStatus.OK);
 
