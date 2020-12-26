@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.net.InetAddress;
+
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
@@ -19,14 +21,14 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 @Configuration
 public class DynamoDBConfig {
 
-	// @Value("${amazon.access.key}")
-	// private String awsAccessKey;
+	@Value("${amazon.access.key}")
+	private String awsAccessKey;
 
-	// @Value("${amazon.access.secret-key}")
-	// private String awsSecretKey;
+	@Value("${amazon.access.secret-key}")
+	private String awsSecretKey;
 
-	// @Value("${amazon.end-point.url}")
-	// private String awsDynamoDBEndPoint;
+	@Value("${amazon.end-point.url}")
+	private String awsDynamoDBEndPoint;
 
 	@Value("${amazonProperties.endpointUrl}")
 	private String endpointUrl;
@@ -39,23 +41,37 @@ public class DynamoDBConfig {
 	@Value("${amazonProperties.sessionToken}")
 	private String sessionToken;
 
+	// @Bean
+	// public AWSCredentials amazonAWSCredentials() {
+	// 	return new BasicSessionCredentials(this.accessKey, this.secretKey, this.sessionToken);
+	// }
 	@Bean
-	public AWSCredentials amazonAWSCredentials() {
-		return new BasicSessionCredentials(this.accessKey, this.secretKey, this.sessionToken);
+	public AWSCredentials amazonAWSCredentialsBasic() {
+		return new BasicAWSCredentials(awsAccessKey, awsSecretKey);
 	}
 
-	public AWSCredentialsProvider amazonAWSCredentialsProvider() {
-		return new AWSStaticCredentialsProvider(amazonAWSCredentials());
+	// public AWSCredentialsProvider amazonAWSCredentialsProvider() {
+	// 	return new AWSStaticCredentialsProvider(amazonAWSCredentials());
+	// }
+	public AWSCredentialsProvider amazonAWSCredentialsProviderBasic() {
+		return new AWSStaticCredentialsProvider(amazonAWSCredentialsBasic());
 	}
 
+	// @Bean
+	// public AmazonDynamoDB amazonDynamoDB() {
+	// 	return AmazonDynamoDBClientBuilder.standard().withRegion(Regions.US_EAST_1)
+	// 			.withCredentials(amazonAWSCredentialsProvider()).build();
+	// }
 	@Bean
-	public AmazonDynamoDB amazonDynamoDB() {
-		return AmazonDynamoDBClientBuilder.standard().withRegion(Regions.US_EAST_1)
-				.withCredentials(amazonAWSCredentialsProvider()).build();
+	public AmazonDynamoDB amazonDynamoDBBasic() {
+		return AmazonDynamoDBClientBuilder.standard()
+				.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(awsDynamoDBEndPoint, ""))
+				.withCredentials(amazonAWSCredentialsProviderBasic()).build();
 	}
 
 	@Bean
 	public DynamoDBMapper mapper() {
-		return new DynamoDBMapper(amazonDynamoDB());
+		return new DynamoDBMapper(amazonDynamoDBBasic());
+		// return new DynamoDBMapper(amazonDynamoDB());
 	}
 }
