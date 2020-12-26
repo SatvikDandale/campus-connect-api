@@ -105,8 +105,10 @@ public class UserDetailsEntity {
 
 	@Override
 	public String toString() {
-		return "UserDetailsEntity [email=" + email + ", firstName=" + firstName + ", intro=" + intro + ", lastName="
-				+ lastName + ", profilePhotoURL=" + profilePhotoURL + ", userName=" + userName + "]";
+		return "UserDetailsEntity [email=" + email + ", firstName=" + firstName + ", intro=" + intro + ", isEnabled="
+				+ isEnabled + ", lastName=" + lastName + ", profilePhotoURL=" + profilePhotoURL + ", userName="
+				+ userName + "]";
 	}
+
 
 }

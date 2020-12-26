@@ -237,15 +237,7 @@ public class UserDBEntity {
 		this.profilePhotoURL = profilePhotoURL;
 	}
 
-	@Override
-	public String toString() {
-		return "UserDBEntity [bio=" + bio + ", collegeDetails=" + collegeDetails + ", email=" + email + ", experiences="
-				+ experiences + ", firstName=" + firstName + ", followers=" + followers + ", following=" + following
-				+ ", groups=" + groups + ", intro=" + intro + ", lastName=" + lastName + ", password=" + password
-				+ ", personalChats=" + personalChats + ", personalDetails=" + personalDetails + ", phone=" + phone
-				+ ", posts=" + posts + ", profilePhotoURL=" + profilePhotoURL + ", socialLinks=" + socialLinks
-				+ ", userName=" + userName + "]";
-	}
+	
 
 	@Override
 	public int hashCode() {
@@ -372,6 +364,16 @@ public class UserDBEntity {
 		} else if (!userName.equals(other.userName))
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "UserDBEntity [bio=" + bio + ", collegeDetails=" + collegeDetails + ", email=" + email + ", experiences="
+				+ experiences + ", firstName=" + firstName + ", followers=" + followers + ", following=" + following
+				+ ", groups=" + groups + ", intro=" + intro + ", isEnabled=" + isEnabled + ", lastName=" + lastName
+				+ ", password=" + password + ", personalChats=" + personalChats + ", personalDetails=" + personalDetails
+				+ ", phone=" + phone + ", posts=" + posts + ", profilePhotoURL=" + profilePhotoURL + ", socialLinks="
+				+ socialLinks + ", userName=" + userName + "]";
 	}
 	
 
