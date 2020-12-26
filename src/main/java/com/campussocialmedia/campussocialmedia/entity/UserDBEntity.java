@@ -13,6 +13,7 @@ public class UserDBEntity {
 
 	private String userName;
 	private String email;
+	private boolean isEnabled;  //to check wheteher email verification is done or not
 	private String password;
 	private String firstName;
 	private String lastName;
@@ -81,6 +82,15 @@ public class UserDBEntity {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	
+	@DynamoDBAttribute
+	public boolean isEnabled() {
+		return isEnabled;
+	}
+
+	public void setEnabled(boolean isEnabled) {
+		this.isEnabled = isEnabled;
 	}
 
 	@DynamoDBAttribute

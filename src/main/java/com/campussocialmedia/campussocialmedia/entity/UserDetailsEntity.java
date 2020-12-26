@@ -7,6 +7,7 @@ public class UserDetailsEntity {
 
 	private String userName;
 	private String email;
+	private boolean isEnabled;  //to check wheteher email verification is done or not
 	private String firstName;
 	private String lastName;
 	private String intro;
@@ -17,7 +18,7 @@ public class UserDetailsEntity {
 	}
 
 	public UserDetailsEntity(String userName, String email, String firstName, String lastName, String intro,
-			String profilePhotoURL) {
+			String profilePhotoURL,  boolean isEnabled) {
 		super();
 		this.userName = userName;
 		this.email = email;
@@ -26,6 +27,15 @@ public class UserDetailsEntity {
 		this.intro = intro;
 		this.profilePhotoURL = profilePhotoURL;
 	}
+	public UserDetailsEntity(String userName, String email, String firstName, String lastName, String intro, boolean isEnabled) {
+		super();
+		this.userName = userName;
+		this.email = email;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.intro = intro;
+	}
+	
 
 	public UserDetailsEntity(String userName, String email, String firstName, String lastName, String intro) {
 		super();
@@ -50,6 +60,15 @@ public class UserDetailsEntity {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	
+	
+	public boolean isEnabled() {
+		return isEnabled;
+	}
+
+	public void setEnabled(boolean isEnabled) {
+		this.isEnabled = isEnabled;
 	}
 
 	public String getFirstName() {

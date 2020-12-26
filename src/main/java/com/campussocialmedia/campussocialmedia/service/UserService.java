@@ -95,6 +95,7 @@ public class UserService {
 		user.setBio("-");
 		user.setIntro("-");
 		user.setPosts(new ArrayList<>());
+		user.setEnabled(false);
 
 		UserDBEntity userEntity = repository.addUser(convertToEntity(user));
 		return convertToDTO(userEntity);
@@ -223,6 +224,14 @@ public class UserService {
 	public String getProfilePhotoForUserName(String userName) {
 		UserDBEntity user = repository.findUserByUserName(userName);
 		return user.getProfilePhotoURL();
+	}
+	
+	public UserDTO updateUser(UserDTO userDTO) {
+		//userDBEntity.setEnabled(true);
+		UserDBEntity userDBEntity = convertToEntity(userDTO);
+		repository.updateUser(userDBEntity);
+		userDTO = convertToDTO(userDBEntity);
+		return userDTO;
 	}
 
 }

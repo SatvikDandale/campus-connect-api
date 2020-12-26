@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.authentication.AuthenticationManager;
 // import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,14 +20,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 //import org.springframework.security.core.userdetails.User;
 
 import com.campussocialmedia.campussocialmedia.entity.AuthenticationRequest;
 import com.campussocialmedia.campussocialmedia.entity.AuthenticationResponse;
+import com.campussocialmedia.campussocialmedia.entity.ConfirmationToken;
 import com.campussocialmedia.campussocialmedia.entity.UserDTO;
 import com.campussocialmedia.campussocialmedia.entity.UserDetailsEntity;
 import com.campussocialmedia.campussocialmedia.exception.ExceptionResponse;
+import com.campussocialmedia.campussocialmedia.repository.ConfirmationTokenRepository;
+import com.campussocialmedia.campussocialmedia.service.EmailSenderService;
 // import com.campussocialmedia.campussocialmedia.service.MyUserDetailsService;
 import com.campussocialmedia.campussocialmedia.service.UserService;
 import com.campussocialmedia.campussocialmedia.util.JwtUtil;
@@ -47,6 +54,15 @@ public class AuthController {
 
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+    private ConfirmationTokenRepository confirmationTokenRepository;
+
+	@Autowired
+    private EmailSenderService emailSenderService;
+	
+	@Autowired
+    private Environment env;
 
 	/*
 	 * The logic of signUp endpoint is to use AuthenticationManager to check if the
@@ -67,7 +83,47 @@ public class AuthController {
 		} catch (AuthenticationException e) {
 			// This user does not exist so user can be created
 			// System.out.println("New user created here:" + userDTO);
+			try {
+				//generate token and send a verification link
+				ConfirmationToken confirmationToken = new ConfirmationToken(authenticationRequest.getUserName());
+
+	            confirmationTokenRepository.addConfirmationToken(confirmationToken);
+
+	            SimpleMailMessage mailMessage = new SimpleMailMessage();
+	            mailMessage.setTo(authenticationRequest.getEmail());
+	            mailMessage.setSubject("Complete Registration!");
+	            mailMessage.setFrom("campus.connect.official1@gmail.com");
+	            mailMessage.setText("To confirm your account, please click here : "
+	            +env.getProperty("url")+"/confirm-account?token="+confirmationToken.getConfirmationToken());
+
+	            emailSenderService.sendEmail(mailMessage);
+			}
+			catch(Exception ex) {
+				//if failed to send a verification link
+				return new ResponseEntity<>("Error in sending the verification link",
+	            		org.springframework.http.HttpStatus.FORBIDDEN);
+				
+			}
+			//Now as mail is sent add the user to database
 			UserDTO userDTO = userService.addUser(authenticationRequest);
+			return new ResponseEntity<>("Registered!! Complete Email Verification",
+            		org.springframework.http.HttpStatus.CREATED);
+			/*
+			UserDTO userDTO = userService.addUser(authenticationRequest);
+			ConfirmationToken confirmationToken = new ConfirmationToken(userDTO.getUserName());
+
+            confirmationTokenRepository.addConfirmationToken(confirmationToken);
+
+            SimpleMailMessage mailMessage = new SimpleMailMessage();
+            mailMessage.setTo(userDTO.getEmail());
+            mailMessage.setSubject("Complete Registration!");
+            mailMessage.setFrom("campus.connect.official1@gmail.com");
+            mailMessage.setText("To confirm your account, please click here : "
+            +env.getProperty("url")+"/confirm-account?token="+confirmationToken.getConfirmationToken());
+
+            emailSenderService.sendEmail(mailMessage);
+            */
+            /*
 			// System.out.println("#####");
 			// Why is JWT token returned after signup?
 			// For now. Once we get email verification up and running, we will only return
@@ -81,6 +137,8 @@ public class AuthController {
 
 			return new ResponseEntity<>(new AuthenticationResponse(jwt, userDetailsEntity),
 					org.springframework.http.HttpStatus.CREATED);
+			*/
+            
 		}
 		// If no exception is returned by the AuthenticationManager, then the user with
 		// passed
@@ -88,6 +146,32 @@ public class AuthController {
 		return new ResponseEntity<>(new ExceptionResponse(new Date(), "User Already Exists", "/signUp"),
 				org.springframework.http.HttpStatus.CONFLICT);
 	}
+	
+	//Verification link
+	@RequestMapping(value="/confirm-account", method= {RequestMethod.GET})
+    public ResponseEntity<?> confirmUserAccount(@RequestParam("token")String confirmationToken)
+    {
+		
+		System.out.println(confirmationToken);
+        ConfirmationToken token = confirmationTokenRepository.findByConfirmationToken(confirmationToken);
+        System.out.println(token);
+        
+        if(token != null)
+        {
+        	UserDTO userDTO =  userService.getUserByUserName(token.getUsername());
+            userDTO.setEnabled(true);  //isEnabled is set to true which means user is verified
+            userService.updateUser(userDTO);   //update user
+           return new ResponseEntity<>("Verified", HttpStatus.OK);  
+        }
+        else
+        {
+        	
+        	return new ResponseEntity<>("The link is invalid or broken", HttpStatus.FORBIDDEN);
+            
+        }
+
+        //return modelAndView;
+    }
 
 	/*
 	 * AuthenticationManager passes the userName from incoming AuthenticationRequest
@@ -115,13 +199,15 @@ public class AuthController {
 		System.out.println(authenticationRequest);
 		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUserName(),
 				authenticationRequest.getPassword()));
-
+		
 		UserDetailsEntity user = userService.getUserBasicDetailsByUserName(authenticationRequest.getUserName());
-		UserDetails userDetails = new org.springframework.security.core.userdetails.User(
-				authenticationRequest.getUserName(), authenticationRequest.getPassword(), new ArrayList<>());
-		final String jwt = jwtTokenUtil.generateToken(userDetails);
-		return ResponseEntity.ok(new AuthenticationResponse(jwt, user));
-
+		if(user.isEnabled()) {  //if user is veirfied then only allow to login
+			UserDetails userDetails = new org.springframework.security.core.userdetails.User(
+					authenticationRequest.getUserName(), authenticationRequest.getPassword(), new ArrayList<>());
+			final String jwt = jwtTokenUtil.generateToken(userDetails);
+			return new ResponseEntity<>(new AuthenticationResponse(jwt, user), HttpStatus.OK );
+		}
+		return new ResponseEntity<>("Not verified", HttpStatus.FORBIDDEN);
 	}
 
 }

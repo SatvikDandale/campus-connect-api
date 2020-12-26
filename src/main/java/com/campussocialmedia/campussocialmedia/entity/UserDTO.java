@@ -7,6 +7,7 @@ public class UserDTO {
 	// private String userId;
 	private String userName;
 	private String email;
+	private boolean isEnabled;  //to check wheteher email verification is done or not
 	private String password;
 	private String firstName;
 	private String lastName;
@@ -108,6 +109,14 @@ public class UserDTO {
 		this.email = email;
 	}
 
+	public boolean isEnabled() {
+		return isEnabled;
+	}
+
+	public void setEnabled(boolean isEnabled) {
+		this.isEnabled = isEnabled;
+	}
+	
 	public String getPassword() {
 		return password;
 	}
