@@ -101,43 +101,14 @@ public class AuthController {
 			catch(Exception ex) {
 				//if failed to send a verification link
 				return new ResponseEntity<>("Error in sending the verification link",
-	            		org.springframework.http.HttpStatus.FORBIDDEN);
+	            		org.springframework.http.HttpStatus.EXPECTATION_FAILED);
 				
 			}
 			//Now as mail is sent add the user to database
 			UserDTO userDTO = userService.addUser(authenticationRequest);
 			return new ResponseEntity<>("Registered!! Complete Email Verification",
             		org.springframework.http.HttpStatus.CREATED);
-			/*
-			UserDTO userDTO = userService.addUser(authenticationRequest);
-			ConfirmationToken confirmationToken = new ConfirmationToken(userDTO.getUserName());
-
-            confirmationTokenRepository.addConfirmationToken(confirmationToken);
-
-            SimpleMailMessage mailMessage = new SimpleMailMessage();
-            mailMessage.setTo(userDTO.getEmail());
-            mailMessage.setSubject("Complete Registration!");
-            mailMessage.setFrom("campus.connect.official1@gmail.com");
-            mailMessage.setText("To confirm your account, please click here : "
-            +env.getProperty("url")+"/confirm-account?token="+confirmationToken.getConfirmationToken());
-
-            emailSenderService.sendEmail(mailMessage);
-            */
-            /*
-			// System.out.println("#####");
-			// Why is JWT token returned after signup?
-			// For now. Once we get email verification up and running, we will only return
-			// JTW on login.
-			UserDetails userDetails = new org.springframework.security.core.userdetails.User(userDTO.getUserName(),
-					userDTO.getPassword(), new ArrayList<>());
-			final String jwt = jwtTokenUtil.generateToken(userDetails);
-
-			UserDetailsEntity userDetailsEntity = new UserDetailsEntity(userDTO.getUserName(), userDTO.getEmail(),
-					userDTO.getFirstName(), userDTO.getLastName(), userDTO.getIntro());
-
-			return new ResponseEntity<>(new AuthenticationResponse(jwt, userDetailsEntity),
-					org.springframework.http.HttpStatus.CREATED);
-			*/
+			
             
 		}
 		// If no exception is returned by the AuthenticationManager, then the user with
