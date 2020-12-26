@@ -3,10 +3,13 @@ package com.campussocialmedia.campussocialmedia.controllers;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.mail.SendFailedException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailSendException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.authentication.AuthenticationManager;
 // import org.springframework.security.authentication.BadCredentialsException;
@@ -95,19 +98,24 @@ public class AuthController {
 	            mailMessage.setFrom("campus.connect.official1@gmail.com");
 	            mailMessage.setText("To confirm your account, please click here : "
 	            +env.getProperty("url")+"/confirm-account?token="+confirmationToken.getConfirmationToken());
-
-	            emailSenderService.sendEmail(mailMessage);
+				// emailSenderService.sendEmail(mailMessage);
+				emailSenderService.sendSynchronousMail(mailMessage);
+				
+				//Now as mail is sent add the user to database
+				UserDTO userDTO = userService.addUser(authenticationRequest);
+				return new ResponseEntity<>("Registered!! Complete Email Verification",
+						org.springframework.http.HttpStatus.CREATED);
+			}
+			catch(MailSendException ex) {
+				return new ResponseEntity<>("Email Address not valid. Error sending the verification link.", HttpStatus.NOT_FOUND);
 			}
 			catch(Exception ex) {
+				System.out.println(ex);
 				//if failed to send a verification link
 				return new ResponseEntity<>("Error in sending the verification link",
-	            		org.springframework.http.HttpStatus.EXPECTATION_FAILED);
+	            		org.springframework.http.HttpStatus.FORBIDDEN);
 				
 			}
-			//Now as mail is sent add the user to database
-			UserDTO userDTO = userService.addUser(authenticationRequest);
-			return new ResponseEntity<>("Registered!! Complete Email Verification",
-            		org.springframework.http.HttpStatus.CREATED);
 			
             
 		}
