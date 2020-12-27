@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.net.InetAddress;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSCredentialsProvider;
@@ -17,6 +16,7 @@ import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
+import com.amazonaws.services.lambda.model.Environment;
 
 @Configuration
 public class DynamoDBConfig {
@@ -43,6 +43,8 @@ public class DynamoDBConfig {
 
 	@Bean
 	public AWSCredentials amazonAWSCredentials() {
+		if(System.getenv("serverURL") == null)
+			return new BasicAWSCredentials(awsAccessKey, awsSecretKey);
 		return new BasicSessionCredentials(this.accessKey, this.secretKey, this.sessionToken);
 	}
 	// @Bean
@@ -59,6 +61,10 @@ public class DynamoDBConfig {
 
 	@Bean
 	public AmazonDynamoDB amazonDynamoDB() {
+		if(System.getenv("serverURL") == null)
+			return AmazonDynamoDBClientBuilder.standard()
+					.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(awsDynamoDBEndPoint, ""))
+					.withCredentials(amazonAWSCredentialsProvider()).build();
 		return AmazonDynamoDBClientBuilder.standard().withRegion(Regions.US_EAST_1)
 				.withCredentials(amazonAWSCredentialsProvider()).build();
 	}
