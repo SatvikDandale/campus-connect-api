@@ -43,8 +43,6 @@ public class DynamoDBConfig {
 
 	@Bean
 	public AWSCredentials amazonAWSCredentials() {
-		if(System.getenv("serverURL") == null)
-			return new BasicAWSCredentials(awsAccessKey, awsSecretKey);
 		return new BasicSessionCredentials(this.accessKey, this.secretKey, this.sessionToken);
 	}
 	// @Bean
@@ -61,10 +59,6 @@ public class DynamoDBConfig {
 
 	@Bean
 	public AmazonDynamoDB amazonDynamoDB() {
-		if(System.getenv("serverURL") == null)
-			return AmazonDynamoDBClientBuilder.standard()
-					.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(awsDynamoDBEndPoint, ""))
-					.withCredentials(amazonAWSCredentialsProvider()).build();
 		return AmazonDynamoDBClientBuilder.standard().withRegion(Regions.US_EAST_1)
 				.withCredentials(amazonAWSCredentialsProvider()).build();
 	}
