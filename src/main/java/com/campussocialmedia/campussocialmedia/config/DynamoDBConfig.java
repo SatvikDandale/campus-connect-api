@@ -72,6 +72,6 @@ public class DynamoDBConfig {
 	@Bean
 	public DynamoDBMapper mapper() {
 		return new DynamoDBMapper(amazonDynamoDB());
-		// return new DynamoDBMapper(amazonDynamoDB());
+		// return new DynamoDBMapper(amazonDynamoDBBasic());
 	}
 }
