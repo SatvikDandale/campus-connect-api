@@ -20,6 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.Response;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.amazonaws.services.dynamodbv2.model.ScanRequest;
+import com.amazonaws.services.dynamodbv2.model.ScanResult;
 import com.campussocialmedia.campussocialmedia.entity.UserAbout;
 import com.campussocialmedia.campussocialmedia.entity.UserDTO;
 import com.campussocialmedia.campussocialmedia.entity.UserFollowerFollowing;
@@ -179,5 +184,5 @@ public class UserResourceController {
 	public String getProfilePhotoForUserName(@PathVariable String userName) {
 		return service.getProfilePhotoForUserName(userName);
 	}
-
+	
 }
