@@ -22,8 +22,8 @@ public class CommentRepository {
     private DynamoDBMapper mapper;
 
     public Comment addComment(Comment comment) {
-        System.out.println(comment);
         mapper.save(comment);
+        System.out.println(comment);
         return comment;
     }
 
