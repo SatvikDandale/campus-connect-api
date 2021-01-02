@@ -14,10 +14,10 @@ public class CommentService {
     @Autowired
     private CommentRepository repository;
 
-    public void addComment(String userName, Comment comment)
+    public Comment addComment(String userName, Comment comment)
     {
         comment.setUserName(userName);
-        repository.addComment(comment);
+        return repository.addComment(comment);
     }
 
     public List<Comment> getCommentsForPosts(String postID)
