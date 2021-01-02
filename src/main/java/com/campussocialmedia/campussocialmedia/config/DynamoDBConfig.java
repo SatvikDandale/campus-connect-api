@@ -41,33 +41,33 @@ public class DynamoDBConfig {
 	@Value("${amazonProperties.sessionToken}")
 	private String sessionToken;
 
-	// @Bean
-	// public AWSCredentials amazonAWSCredentials() {
-	// 	return new BasicSessionCredentials(this.accessKey, this.secretKey, this.sessionToken);
-	// }
 	@Bean
-	public AWSCredentials amazonAWSCredentialsBasic() {
-		return new BasicAWSCredentials(awsAccessKey, awsSecretKey);
+	public AWSCredentials amazonAWSCredentials() {
+		return new BasicSessionCredentials(this.accessKey, this.secretKey, this.sessionToken);
 	}
-
-	// public AWSCredentialsProvider amazonAWSCredentialsProvider() {
-	// 	return new AWSStaticCredentialsProvider(amazonAWSCredentials());
-	// }
-	public AWSCredentialsProvider amazonAWSCredentialsProviderBasic() {
-		return new AWSStaticCredentialsProvider(amazonAWSCredentialsBasic());
-	}
-
 	// @Bean
-	// public AmazonDynamoDB amazonDynamoDB() {
-	// 	return AmazonDynamoDBClientBuilder.standard().withRegion(Regions.US_EAST_1)
-	// 			.withCredentials(amazonAWSCredentialsProvider()).build();
+	// public AWSCredentials amazonAWSCredentialsBasic() {
+	// 	return new BasicAWSCredentials(awsAccessKey, awsSecretKey);
 	// }
+
+	public AWSCredentialsProvider amazonAWSCredentialsProvider() {
+		return new AWSStaticCredentialsProvider(amazonAWSCredentials());
+	}
+	// public AWSCredentialsProvider amazonAWSCredentialsProviderBasic() {
+	// 	return new AWSStaticCredentialsProvider(amazonAWSCredentialsBasic());
+	// }
+
 	@Bean
 	public AmazonDynamoDB amazonDynamoDB() {
-		return AmazonDynamoDBClientBuilder.standard()
-				.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(awsDynamoDBEndPoint, ""))
-				.withCredentials(amazonAWSCredentialsProviderBasic()).build();
+		return AmazonDynamoDBClientBuilder.standard().withRegion(Regions.US_EAST_1)
+				.withCredentials(amazonAWSCredentialsProvider()).build();
 	}
+	// @Bean
+	// public AmazonDynamoDB amazonDynamoDBBasic() {
+	// 	return AmazonDynamoDBClientBuilder.standard()
+	// 			.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(awsDynamoDBEndPoint, ""))
+	// 			.withCredentials(amazonAWSCredentialsProviderBasic()).build();
+	// }
 
 	@Bean
 	public DynamoDBMapper mapper() {
