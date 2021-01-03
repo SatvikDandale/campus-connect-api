@@ -21,7 +21,7 @@ public class FeedService {
 
         List<String> userNames = userService.getFollowing(userName);
 
-        return postService.findAllPostsByUserNames(userNames);
+        return postService.findAllPostsByUserNames(userNames, userName);
 
     }
 

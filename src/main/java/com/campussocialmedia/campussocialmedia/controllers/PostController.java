@@ -64,10 +64,12 @@ public class PostController {
     }
 
     @PostMapping("/allPosts")
-    public ResponseEntity<?> findPostsForAllUserNames(@RequestBody Map<String, List<String>> jsonObject) {
+    public ResponseEntity<?> findPostsForAllUserNames(@RequestBody Map<String, List<String>> jsonObject, @RequestHeader(name = "Authorization") String token){
 
+        String jwt = token.substring(7);
+        String requester = jwtUtil.extractUsername(jwt);
         List<String> userNames = jsonObject.get("userNames");
-        return new ResponseEntity<>(service.findAllPostsByUserNames(userNames), HttpStatus.OK);
+        return new ResponseEntity<>(service.findAllPostsByUserNames(userNames, requester), HttpStatus.OK);
     }
 
 

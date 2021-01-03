@@ -19,7 +19,6 @@ public class SearchRepository {
 	private AmazonDynamoDB client;
 	
 	public List<Map<String, AttributeValue>> searchByUsername(String searchText) {
-		System.out.println("in Repo" + searchText);
 		Map<String, AttributeValue> expressionAttributeValues =
 			    new HashMap<String, AttributeValue>();
 			expressionAttributeValues.put(":val", new AttributeValue(searchText));
