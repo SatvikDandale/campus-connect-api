@@ -54,3 +54,7 @@ DynamoDBLocal_lib
 third_party_licenses
 dynamodb_local_latest/*.jar
 dynamodb_local_latest/*.txt
+
+
+#config
+DynamoDBConfig.java
