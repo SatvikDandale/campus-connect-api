@@ -19,6 +19,7 @@ import com.campussocialmedia.campussocialmedia.entity.UserDBEntity;
 import com.campussocialmedia.campussocialmedia.entity.UserDTO;
 import com.campussocialmedia.campussocialmedia.entity.UserDetailsEntity;
 import com.campussocialmedia.campussocialmedia.entity.UserFollowerFollowing;
+import com.campussocialmedia.campussocialmedia.entity.UserPasswordEntity;
 import com.campussocialmedia.campussocialmedia.repository.UserRepository;
 
 @Service
@@ -65,6 +66,10 @@ public class UserService {
 
 	private UserAbout convertToAbout(UserDBEntity user) {
 		return modelMapper.map(user, UserAbout.class);
+	}
+	
+	private UserPasswordEntity convertToPasswordEntity(UserDBEntity user) {
+		return modelMapper.map(user, UserPasswordEntity.class);
 	}
 
 	private UserFollowerFollowing convertToFollowerFollowing(UserDBEntity user) {
@@ -166,6 +171,12 @@ public class UserService {
 		UserDTO userDTO = convertToDTO(userDBEntity);
 		return userDTO;
 	}
+	
+	public UserPasswordEntity getPasswordEntityUserByUserName(String userName) {
+		UserDBEntity userDBEntity = repository.findUserByUserName(userName);
+		UserPasswordEntity userPasswordEntity = convertToPasswordEntity(userDBEntity);
+		return userPasswordEntity;
+	}
 
 	// Not Used
 	public UserDetailsEntity getUserBasicDetailsByUserName(String userName) {
@@ -190,6 +201,13 @@ public class UserService {
 		UserDBEntity originalUser = repository.findUserByUserName(user.getUserName());
 		UserDBEntity updatedUser = convertToEntity(user, originalUser);
 		updatedUser = repository.updateUserAboutDetails(updatedUser);
+	}
+	
+	public void updateUserPassword(String userName, String new_password) {
+		UserDBEntity originalUser = repository.findUserByUserName(userName);
+		originalUser.setPassword(new_password);
+		repository.updateUserAboutDetails(originalUser);
+		return;
 	}
 
 	// Tested

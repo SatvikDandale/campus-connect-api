@@ -2,6 +2,7 @@ package com.campussocialmedia.campussocialmedia.controllers;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 
 import javax.mail.SendFailedException;
 
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 // import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,6 +34,7 @@ import com.campussocialmedia.campussocialmedia.entity.AuthenticationResponse;
 import com.campussocialmedia.campussocialmedia.entity.ConfirmationToken;
 import com.campussocialmedia.campussocialmedia.entity.UserDTO;
 import com.campussocialmedia.campussocialmedia.entity.UserDetailsEntity;
+import com.campussocialmedia.campussocialmedia.entity.UserPasswordEntity;
 import com.campussocialmedia.campussocialmedia.exception.ExceptionResponse;
 import com.campussocialmedia.campussocialmedia.repository.ConfirmationTokenRepository;
 import com.campussocialmedia.campussocialmedia.service.EmailSenderService;
@@ -189,5 +192,30 @@ public class AuthController {
 		}
 		return new ResponseEntity<>("Not verified", HttpStatus.FORBIDDEN);
 	}
-
+	
+	//Route to change password
+	@RequestMapping(value="/changePassword", method= {RequestMethod.POST})
+    public ResponseEntity<?> changePassword(@RequestHeader("Authorization") String token,@RequestBody Map<String, String> jsonObject)
+    {
+		//extract username from jwt token
+		String userName = jwtTokenUtil.extractUsername(token.substring(7));
+		if(userName != null) {
+			UserPasswordEntity userPasswordEntity = userService.getPasswordEntityUserByUserName(userName); //fetch current password from databse
+			//checks if current password entered by user and Database password match
+			//If matched update user password with new password
+			if (jsonObject.get("current_password").equals(userPasswordEntity.getPassword())) { 
+				userService.updateUserPassword(userName,jsonObject.get("new_password"));
+				return new ResponseEntity<>("Password Changed!!", HttpStatus.OK);
+			}
+			else {
+				return new ResponseEntity<>("Incorrect current_password", HttpStatus.FORBIDDEN);
+		        
+			}
+			
+		}
+		return new ResponseEntity<>("The user must be logged in", HttpStatus.UNAUTHORIZED);
+        
+	}
+	
+	
 }
