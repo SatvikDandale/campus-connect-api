@@ -1,9 +1,14 @@
 package com.campussocialmedia.campussocialmedia.service;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import com.campussocialmedia.campussocialmedia.entity.Committee;
 import com.campussocialmedia.campussocialmedia.entity.CommitteeAbout;
+import com.campussocialmedia.campussocialmedia.entity.CommitteeAuthenticationRequest;
+import com.campussocialmedia.campussocialmedia.entity.CommitteeDTO;
 import com.campussocialmedia.campussocialmedia.entity.CommitteeMembers;
 import com.campussocialmedia.campussocialmedia.repository.CommitteeRepository;
 
@@ -34,6 +39,31 @@ public class CommitteeService {
         temp.setFollowers(originalObject.getFollowers());
         // temp.setFollowing(originalObject.getFollowing());
         return temp;
+    }
+
+    private CommitteeDTO convertToDTO(CommitteeAuthenticationRequest authenticationRequest) {
+        return modelMapper.map(authenticationRequest, CommitteeDTO.class);
+    }
+
+    private Committee convertToEntity(CommitteeDTO committeeDTO) {
+        return modelMapper.map(committeeDTO, Committee.class);
+    }
+
+    public void addCommittee(CommitteeAuthenticationRequest authenticationRequest) {
+        CommitteeDTO user = convertToDTO(authenticationRequest);
+        user.setFollowers(new ArrayList<String>());
+        user.setBio("-");
+        user.setPosts(new ArrayList<>());
+        user.setEnabled(false);
+        user.setCollegeProfile(false);
+        user.setLogoUrl("-");
+        user.setSocialLinks(new HashMap<String, String>());
+ 
+        List<CommitteeMembers> emptylist = Collections.emptyList();
+        user.setCommitteeMembers(emptylist);
+        user.setPosts(new ArrayList<>());
+
+        Committee commitee = committeeRepository.addCommittee(convertToEntity(user));
     }
 
     public CommitteeAbout getCommitteeAboutByUserName(String userName){

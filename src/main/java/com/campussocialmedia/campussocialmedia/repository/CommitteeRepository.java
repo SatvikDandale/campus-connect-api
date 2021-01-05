@@ -23,6 +23,11 @@ public class CommitteeRepository {
         return mapper.load(Committee.class, userName);
     }
 
+    public Committee addCommittee(Committee committee){
+        mapper.save(committee);
+        return committee;
+    }
+
     public Committee updateCommitteeAboutDetails(Committee committee) {
         mapper.save(committee, buildExpression(committee));
         return committee;

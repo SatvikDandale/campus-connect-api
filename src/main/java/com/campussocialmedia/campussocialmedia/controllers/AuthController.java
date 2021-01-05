@@ -29,11 +29,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.campussocialmedia.campussocialmedia.entity.AuthenticationRequest;
 import com.campussocialmedia.campussocialmedia.entity.AuthenticationResponse;
+import com.campussocialmedia.campussocialmedia.entity.CommitteeAuthenticationRequest;
 import com.campussocialmedia.campussocialmedia.entity.ConfirmationToken;
 import com.campussocialmedia.campussocialmedia.entity.UserDTO;
 import com.campussocialmedia.campussocialmedia.entity.UserDetailsEntity;
 import com.campussocialmedia.campussocialmedia.exception.ExceptionResponse;
 import com.campussocialmedia.campussocialmedia.repository.ConfirmationTokenRepository;
+import com.campussocialmedia.campussocialmedia.service.CommitteeService;
 import com.campussocialmedia.campussocialmedia.service.EmailSenderService;
 // import com.campussocialmedia.campussocialmedia.service.MyUserDetailsService;
 import com.campussocialmedia.campussocialmedia.service.UserService;
@@ -58,6 +60,9 @@ public class AuthController {
 	@Autowired
 	private UserService userService;
 	
+	@Autowired
+	private CommitteeService committeeService;
+
 	@Autowired
     private ConfirmationTokenRepository confirmationTokenRepository;
 
@@ -119,6 +124,55 @@ public class AuthController {
 			}
 			
             
+		}
+		// If no exception is returned by the AuthenticationManager, then the user with
+		// passed
+		// userName already exists.
+		return new ResponseEntity<>(new ExceptionResponse(new Date(), "User Already Exists", "/signUp"),
+				org.springframework.http.HttpStatus.CONFLICT);
+	}
+
+	@PostMapping("/committee/signUp")
+	public ResponseEntity<?> committeeSignUp(@ModelAttribute CommitteeAuthenticationRequest authenticationRequest) throws Exception {
+		try {
+			System.out.println(authenticationRequest);
+			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+					authenticationRequest.getUserName(), authenticationRequest.getPassword()));
+		} catch (AuthenticationException e) {
+			// This user does not exist so user can be created
+			// System.out.println("New user created here:" + userDTO);
+			try {
+				// generate token and send a verification link
+				ConfirmationToken confirmationToken = new ConfirmationToken(authenticationRequest.getUserName());
+
+				confirmationTokenRepository.addConfirmationToken(confirmationToken);
+
+				SimpleMailMessage mailMessage = new SimpleMailMessage();
+				mailMessage.setTo(authenticationRequest.getEmail());
+				mailMessage.setSubject("Complete Registration!");
+				mailMessage.setFrom("campus.connect.official1@gmail.com");
+				mailMessage.setText("To confirm your account, please click here :\n" + env.getProperty("url")
+						+ "/confirm-account?token=" + confirmationToken.getConfirmationToken());
+				emailSenderService.sendEmail(mailMessage);
+				// System.out.println("serverURL -> " + System.getenv("serverURL"));
+				// System.out.println("serverURL -> " + env.getProperty("url"));
+				// emailSenderService.sendSynchronousMail(mailMessage);
+
+				// Now as mail is sent add the user to database
+				committeeService.addCommittee(authenticationRequest);
+				return new ResponseEntity<>("Registered!! Complete Email Verification",
+						org.springframework.http.HttpStatus.CREATED);
+			} catch (MailSendException ex) {
+				return new ResponseEntity<>("Email Address not valid. Error sending the verification link.",
+						HttpStatus.NOT_FOUND);
+			} catch (Exception ex) {
+				System.out.println(ex);
+				// if failed to send a verification link
+				return new ResponseEntity<>("Error in sending the verification link",
+						org.springframework.http.HttpStatus.FORBIDDEN);
+
+			}
+
 		}
 		// If no exception is returned by the AuthenticationManager, then the user with
 		// passed

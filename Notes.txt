@@ -1,14 +1,23 @@
-To handle any exception:
-Create an object of ExceptionResponse.class
-Return the response entity eg: ResponseEntity<>(exceptionResponse , Httpstatus.NOT_FOUND)
+Committee:
+    required for sign up:
+        name
+        username
+        password
+        logo (optional)
+        email
 
-To create our own exceptions:
-For eg: to create MyCustomException, create a class of that exception:
+    required for login:
+        username 
+        password
 
-public class MyCustomException extends RuntimeException{
-    public MyCustomException(String message){
-        super(message);
-    }
-}
+Signup for college:
+    name
+    email
+    username
+    password
+    logo (optional)
+    email format - store in look up table, not in college sign up entity
 
-..throw MyCustomException("Exception Details")
+Sign in for college:
+    username
+    password

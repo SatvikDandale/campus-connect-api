@@ -36,6 +36,9 @@ import io.jsonwebtoken.SignatureException;
 //endpoints related to committee posts - todo
 
 
+//login endpoints - todo
+//signup endpoints - todo
+
 @RestController
 @CrossOrigin
 public class CommitteeController {
@@ -55,8 +58,7 @@ public class CommitteeController {
 
 
     @GetMapping("/committee/about")
-    public ResponseEntity<?> getCommitteeAbout(@RequestBody CommitteeAbout committeeAboutObject,
-            @RequestHeader(name = "Authorization") String token) throws SignatureException {
+    public ResponseEntity<?> getCommitteeAbout(@RequestHeader(name = "Authorization") String token) throws SignatureException {
 
         String jwt = token.substring(7);
         String userName = jwtUtil.extractUsername(jwt);
@@ -87,8 +89,7 @@ public class CommitteeController {
 
     //return List<String> of followers of committee
     @GetMapping("/committee/getFollowers")
-    public ResponseEntity<?> getCommitteeFollowers(@RequestBody CommitteeMembers committeeMemberObject,
-            @RequestHeader(name = "Authorization") String token) throws SignatureException {
+    public ResponseEntity<?> getCommitteeFollowers(@RequestHeader(name = "Authorization") String token) throws SignatureException {
 
         String jwt = token.substring(7);
         String userName = jwtUtil.extractUsername(jwt);
@@ -151,8 +152,7 @@ public class CommitteeController {
 
     //return a List<CommitteeMember> object
     @GetMapping("/committee/members")
-    public ResponseEntity<?> getCommitteeMembers(@RequestBody CommitteeMembers committeeMemberObject,
-            @RequestHeader(name = "Authorization") String token) throws SignatureException {
+    public ResponseEntity<?> getCommitteeMembers(@RequestHeader(name = "Authorization") String token) throws SignatureException {
         String jwt = token.substring(7);
         String userName = jwtUtil.extractUsername(jwt);
 
@@ -167,7 +167,8 @@ public class CommitteeController {
         }
     }
 
-    //optimse the way this is done  
+    //optimse the way this is done
+    //first check if the added username is valid, else pass error to frontend  
     @PostMapping("/commitee/addMember")
     public ResponseEntity<?> addCommitteeMember(@RequestBody CommitteeMembers committeeMemberObject,
         @RequestHeader(name = "Authorization") String token) throws SignatureException {
