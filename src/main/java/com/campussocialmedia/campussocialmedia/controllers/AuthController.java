@@ -31,7 +31,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.campussocialmedia.campussocialmedia.entity.AuthenticationRequest;
 import com.campussocialmedia.campussocialmedia.entity.AuthenticationResponse;
+import com.campussocialmedia.campussocialmedia.entity.CommitteeAbout;
 import com.campussocialmedia.campussocialmedia.entity.CommitteeAuthenticationRequest;
+import com.campussocialmedia.campussocialmedia.entity.CommitteeAuthenticationResponse;
+import com.campussocialmedia.campussocialmedia.entity.CommitteeDTO;
 import com.campussocialmedia.campussocialmedia.entity.ConfirmationToken;
 import com.campussocialmedia.campussocialmedia.entity.UserDTO;
 import com.campussocialmedia.campussocialmedia.entity.UserDetailsEntity;
@@ -155,7 +158,7 @@ public class AuthController {
 				mailMessage.setSubject("Complete Registration!");
 				mailMessage.setFrom("campus.connect.official1@gmail.com");
 				mailMessage.setText("To confirm your account, please click here :\n" + env.getProperty("url")
-						+ "/confirm-account?token=" + confirmationToken.getConfirmationToken());
+						+ "/committee/confirm-account?token=" + confirmationToken.getConfirmationToken());
 				emailSenderService.sendEmail(mailMessage);
 				// System.out.println("serverURL -> " + System.getenv("serverURL"));
 				// System.out.println("serverURL -> " + env.getProperty("url"));
@@ -180,18 +183,18 @@ public class AuthController {
 		// If no exception is returned by the AuthenticationManager, then the user with
 		// passed
 		// userName already exists.
-		return new ResponseEntity<>(new ExceptionResponse(new Date(), "User Already Exists", "/signUp"),
+		return new ResponseEntity<>(new ExceptionResponse(new Date(), "Committee Already Exists", "/signUp"),
 				org.springframework.http.HttpStatus.CONFLICT);
 	}
 	
-	//Verification link
-	@RequestMapping(value="/confirm-account", method= {RequestMethod.GET})
+	//Verification link for user
+	@RequestMapping(value="/user/confirm-account", method= {RequestMethod.GET})
     public ResponseEntity<?> confirmUserAccount(@RequestParam("token")String confirmationToken)
     {
 		
-		System.out.println(confirmationToken);
+		//System.out.println(confirmationToken);
         ConfirmationToken token = confirmationTokenRepository.findByConfirmationToken(confirmationToken);
-        System.out.println(token);
+        //System.out.println(token);
         
         if(token != null)
         {
@@ -209,6 +212,52 @@ public class AuthController {
 
         //return modelAndView;
     }
+	
+		//Verification link for Committee and college profile
+		@RequestMapping(value="/committee/confirm-account", method= {RequestMethod.GET})
+	    public ResponseEntity<?> confirmCommitteeAccount(@RequestParam("token")String confirmationToken)
+	    {
+			
+			System.out.println(confirmationToken);
+	        ConfirmationToken token = confirmationTokenRepository.findByConfirmationToken(confirmationToken);
+	        System.out.println(token);
+	        
+	        if(token != null)
+	        {
+	        	CommitteeDTO committeeDTO = committeeService.getCommitteeByUserName(token.getUsername());
+	        	committeeDTO.setEnabled(true);  //isEnabled is set to true which means user is verified
+	        	committeeService.updateCommitteeDTO(committeeDTO, token.getUsername());   //update user
+	           return new ResponseEntity<>("Verified", HttpStatus.OK);  
+	        }
+	        else
+	        {
+	        	
+	        	return new ResponseEntity<>("The link is invalid or broken", HttpStatus.FORBIDDEN);
+	            
+	        }
+
+	        //return modelAndView;
+	    }
+		
+		//Login for committee and college profile
+		@RequestMapping(value = "/committee/login", method = RequestMethod.POST)
+		public ResponseEntity<?> createAuthenticationTokenForCommittee(@RequestBody CommitteeAuthenticationRequest authenticationRequest)
+				throws Exception {
+
+			System.out.println(authenticationRequest);
+			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUserName(),
+					authenticationRequest.getPassword()));
+			
+			CommitteeAbout committeeAbout = committeeService.getCommitteeAboutByUserName(authenticationRequest.getUserName());
+			if(committeeAbout.isEnabled()) {  //if user is veirfied then only allow to login
+				UserDetails userDetails = new org.springframework.security.core.userdetails.User(
+						authenticationRequest.getUserName(), authenticationRequest.getPassword(), new ArrayList<>());
+				final String jwt = jwtTokenUtil.generateToken(userDetails);
+				return new ResponseEntity<>(new CommitteeAuthenticationResponse(jwt, committeeAbout), HttpStatus.OK );
+			}
+			return new ResponseEntity<>("Not verified", HttpStatus.FORBIDDEN);
+		}
+		
 
 	/*
 	 * AuthenticationManager passes the userName from incoming AuthenticationRequest

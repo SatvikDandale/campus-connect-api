@@ -44,6 +44,10 @@ public class CommitteeService {
     private CommitteeDTO convertToDTO(CommitteeAuthenticationRequest authenticationRequest) {
         return modelMapper.map(authenticationRequest, CommitteeDTO.class);
     }
+    
+    private CommitteeDTO convertToDTO(Committee committee) {
+    	return modelMapper.map(committee, CommitteeDTO.class);
+    }
 
     private Committee convertToEntity(CommitteeDTO committeeDTO) {
         return modelMapper.map(committeeDTO, Committee.class);
@@ -72,6 +76,12 @@ public class CommitteeService {
         return committeeAbout;
     }
 
+    public CommitteeDTO getCommitteeByUserName(String userName){
+        Committee committee = committeeRepository.findCommitteeByUserName(userName);
+        CommitteeDTO committeeDTO = convertToDTO(committee);
+        return committeeDTO;
+    }
+    
     public void updateCommitteeAboutDetails(CommitteeAbout committeeAboutObject,String userName){
         if (!userName.equals(committeeAboutObject.getUserName())) {
             throw new SignatureException("Unauthorized User");
@@ -80,6 +90,15 @@ public class CommitteeService {
         Committee originalCommitteeObject  = committeeRepository.findCommitteeByUserName(userName);
         Committee updatedCommitteeObject = convertToEntity(committeeAboutObject, originalCommitteeObject);
         updatedCommitteeObject = committeeRepository.updateCommitteeAboutDetails(updatedCommitteeObject);
+    }
+    public void updateCommitteeDTO(CommitteeDTO committeeDTO,String userName){
+        if (!userName.equals(committeeDTO.getUserName())) {
+            throw new SignatureException("Unauthorized User");
+        }
+
+        //Committee originalCommitteeObject  = committeeRepository.findCommitteeByUserName(userName);
+        Committee originalCommitteeObject = convertToEntity(committeeDTO);
+        Committee updatedCommitteeObject = committeeRepository.updateCommitteeAboutDetails(originalCommitteeObject);
     }
 
     public List<String> getCommiteeFollowers(String userName){

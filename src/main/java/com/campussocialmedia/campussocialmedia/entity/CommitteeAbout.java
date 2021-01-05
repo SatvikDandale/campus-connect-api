@@ -6,6 +6,7 @@ import java.util.List;
 public class CommitteeAbout {
     private String name;
     private String userName;
+    private boolean isEnabled;
     private String email;
     private String bio;
     private String logoUrl;
@@ -25,7 +26,20 @@ public class CommitteeAbout {
         this.committeeMembers = committeeMembers;
     }
 
-    public String getName() {
+    public CommitteeAbout(String name, String userName, boolean isEnabled, String email, String bio, String logoUrl,
+			HashMap<String, String> socialLinks, List<CommitteeMembers> committeeMembers) {
+		super();
+		this.name = name;
+		this.userName = userName;
+		this.isEnabled = isEnabled;
+		this.email = email;
+		this.bio = bio;
+		this.logoUrl = logoUrl;
+		this.socialLinks = socialLinks;
+		this.committeeMembers = committeeMembers;
+	}
+
+	public String getName() {
         return this.name;
     }
 
@@ -40,8 +54,16 @@ public class CommitteeAbout {
     public void setUserName(String userName) {
         this.userName = userName;
     }
+    
+    public boolean isEnabled() {
+		return isEnabled;
+	}
 
-    public String getEmail() {
+	public void setEnabled(boolean isEnabled) {
+		this.isEnabled = isEnabled;
+	}
+
+	public String getEmail() {
         return this.email;
     }
 

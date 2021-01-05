@@ -7,7 +7,7 @@ public class CommitteeDTO {
     private String name;
     private String userName;
     private String email;
-    // private String password;
+    private String password;
     private String bio;
     private String logoUrl;
     private List<CommitteeMembers> committeeMembers;
@@ -20,22 +20,24 @@ public class CommitteeDTO {
     public CommitteeDTO() {
     }
 
-    public CommitteeDTO(String name, String userName, String email, String bio, String logoUrl,
-            List<CommitteeMembers> committeeMembers, List<String> followers, HashMap<String, String> socialLinks,
-            List<Long> posts, boolean isEnabled, boolean isCollegeProfile) {
-        this.name = name;
-        this.userName = userName;
-        this.email = email;
-        this.bio = bio;
-        this.logoUrl = logoUrl;
-        this.committeeMembers = committeeMembers;
-        this.followers = followers;
-        this.socialLinks = socialLinks;
-        this.posts = posts;
-        this.isEnabled = isEnabled;
-        this.isCollegeProfile = isCollegeProfile;
-    }
-
+    public CommitteeDTO(String name, String userName, String email, String password, String bio, String logoUrl,
+			List<CommitteeMembers> committeeMembers, List<String> followers, HashMap<String, String> socialLinks,
+			List<Long> posts, boolean isEnabled, boolean isCollegeProfile) {
+		super();
+		this.name = name;
+		this.userName = userName;
+		this.email = email;
+		this.password = password;
+		this.bio = bio;
+		this.logoUrl = logoUrl;
+		this.committeeMembers = committeeMembers;
+		this.followers = followers;
+		this.socialLinks = socialLinks;
+		this.posts = posts;
+		this.isEnabled = isEnabled;
+		this.isCollegeProfile = isCollegeProfile;
+	}
+    
     public String getName() {
         return name;
     }
@@ -43,8 +45,17 @@ public class CommitteeDTO {
     public void setName(String name) {
         this.name = name;
     }
+    
 
-    public String getUserName() {
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getUserName() {
         return userName;
     }
 
