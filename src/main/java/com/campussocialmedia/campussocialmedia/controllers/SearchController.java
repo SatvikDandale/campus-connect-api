@@ -19,7 +19,7 @@ public class SearchController {
 	@Autowired
     private SearchService service;
 	
-	@GetMapping("/searchByUsername/{searchText}")
+	@GetMapping("/searchByUserName/{searchText}")
 	public List<Map<String, AttributeValue>> searchByUserName(@PathVariable String searchText) {
 		return service.searchByUsername(searchText);
 	}

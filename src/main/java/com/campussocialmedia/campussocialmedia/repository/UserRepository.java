@@ -50,7 +50,7 @@ public class UserRepository {
 
 	public String updateUser(UserDBEntity user) {
 		mapper.save(user, buildExpression(user));
-		System.out.print("FOLLOWERS ADDED");
+		//System.out.print("FOLLOWERS ADDED");
 		return "User Updated";
 	}
 

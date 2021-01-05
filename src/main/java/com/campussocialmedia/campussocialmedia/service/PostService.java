@@ -1,6 +1,8 @@
 package com.campussocialmedia.campussocialmedia.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -13,6 +15,7 @@ import com.campussocialmedia.campussocialmedia.repository.PostRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 
 @Service
 public class PostService {
@@ -63,13 +66,24 @@ public class PostService {
         return repository.findPostsByUserName(userName);
     }
 
-    public List<Post> findAllPostsByUserNames(List<String> userNames) {
+    public List<Post> findAllPostsByUserNames(List<String> userNames, String requester) {
         List<Post> posts = new ArrayList<Post>();
         for (String userName : userNames) {
             posts.addAll(this.findPostsByUserName(userName));
         }
+        posts.addAll(this.findPostsByUserName(requester));
+        Collections.sort(posts, new Comparator<Post>() {
+            @Override
+            public int compare(Post p1, Post p2) {
+                return p1.getTimeStamp().compareTo(p2.getTimeStamp()) * -1;
+            }
+        });
+        for (Post post : posts) {
+            System.out.println(post.getTimeStamp());
+        }
         return posts;
     }
+
 
     public void addLikeToPost(String userName, String postID) {
         Post post = repository.findPostByID(postID);

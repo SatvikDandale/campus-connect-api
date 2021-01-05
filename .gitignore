@@ -58,3 +58,5 @@ dynamodb_local_latest/*.txt
 
 #config
 DynamoDBConfig.java
+
+dynamodb_local_latest/shared-local-instance.db
