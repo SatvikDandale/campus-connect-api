@@ -80,8 +80,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 		httpSecurity.cors().and().csrf().disable().authorizeRequests()
-				.antMatchers("/login", "/signUp", "/addDomainName", "/college/{emailId}", "/user/confirm-account", "/committee/signUp", "/committee/login",
-            "/committee/confirm-account").permitAll().anyRequest()
+				.antMatchers("/login", "/signUp", "/addDomainName", "/college/{emailId}", "/user/confirm-account" , "/committee/signUp", "/committee/login", "/committee/confirm-account", "/forgotPassword", "/reset-password").permitAll().anyRequest()
 				.authenticated().and().exceptionHandling().and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		// Asking spring security not to create and manage sessions because we want to

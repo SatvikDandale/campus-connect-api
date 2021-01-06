@@ -36,6 +36,7 @@ import com.campussocialmedia.campussocialmedia.entity.CommitteeAuthenticationReq
 import com.campussocialmedia.campussocialmedia.entity.CommitteeAuthenticationResponse;
 import com.campussocialmedia.campussocialmedia.entity.CommitteeDTO;
 import com.campussocialmedia.campussocialmedia.entity.ConfirmationToken;
+import com.campussocialmedia.campussocialmedia.entity.UserAbout;
 import com.campussocialmedia.campussocialmedia.entity.UserDTO;
 import com.campussocialmedia.campussocialmedia.entity.UserDetailsEntity;
 import com.campussocialmedia.campussocialmedia.entity.UserPasswordEntity;
@@ -210,7 +211,6 @@ public class AuthController {
             
         }
 
-        //return modelAndView;
     }
 	
 		//Verification link for Committee and college profile
@@ -236,7 +236,6 @@ public class AuthController {
 	            
 	        }
 
-	        //return modelAndView;
 	    }
 		
 		//Login for committee and college profile
@@ -291,7 +290,7 @@ public class AuthController {
 		System.out.println(authenticationRequest);
 		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUserName(),
 				authenticationRequest.getPassword()));
-		
+	
 		UserDetailsEntity user = userService.getUserBasicDetailsByUserName(authenticationRequest.getUserName());
 		if(user.isEnabled()) {  //if user is veirfied then only allow to login
 			UserDetails userDetails = new org.springframework.security.core.userdetails.User(
@@ -299,6 +298,7 @@ public class AuthController {
 			final String jwt = jwtTokenUtil.generateToken(userDetails);
 			return new ResponseEntity<>(new AuthenticationResponse(jwt, user), HttpStatus.OK );
 		}
+		
 		return new ResponseEntity<>("Not verified", HttpStatus.FORBIDDEN);
 	}
 	
@@ -325,6 +325,70 @@ public class AuthController {
 		return new ResponseEntity<>("The user must be logged in", HttpStatus.UNAUTHORIZED);
         
 	}
+	
+	@RequestMapping(value="/forgotPassword", method= {RequestMethod.POST})
+	public ResponseEntity<?> forgotPassword(@RequestBody Map<String, String> jsonObject)
+	{
+		try {
+			UserAbout userAbout = userService.getUserAboutByUserName(jsonObject.get("userName"));
+			try {
+				// generate token and send a password reset link
+				ConfirmationToken confirmationToken = new ConfirmationToken(jsonObject.get("userName"));
+
+				confirmationTokenRepository.addConfirmationToken(confirmationToken);
+
+				SimpleMailMessage mailMessage = new SimpleMailMessage();
+				mailMessage.setTo(userAbout.getEmail());
+				mailMessage.setSubject("Click the link below to change the Password");
+				mailMessage.setFrom("campus.connect.official1@gmail.com");
+				mailMessage.setText("To confirm your account, please click here :\n" + env.getProperty("frontend-url")
+						+ "/reset-password?token=" + confirmationToken.getConfirmationToken());
+				//emailSenderService.sendEmail(mailMessage);
+				// System.out.println("serverURL -> " + System.getenv("serverURL"));
+				// System.out.println("serverURL -> " + env.getProperty("url"));
+				emailSenderService.sendSynchronousMail(mailMessage);
+
+				return new ResponseEntity<>("A link has been send to the registered emailId",
+						org.springframework.http.HttpStatus.OK);
+			} catch (MailSendException ex) {
+				return new ResponseEntity<>("Email Address not valid. Error sending the verification link.",
+						HttpStatus.NOT_FOUND);
+			} catch (Exception ex) {
+				System.out.println(ex);
+				// if failed to send a verification link
+				return new ResponseEntity<>("Error in sending the verification link",
+						org.springframework.http.HttpStatus.FORBIDDEN);
+			}
+
+		}
+		catch(Exception e) {
+			return new ResponseEntity<>("The user with username "+jsonObject.get("userName")+" not found", HttpStatus.NOT_FOUND);
+		}
+		
+	
+	}
+	@RequestMapping(value="/reset-password", method= {RequestMethod.GET, RequestMethod.POST})
+    public ResponseEntity<?> resetPassword(@RequestParam("token")String confirmationToken,	@RequestBody Map<String, String> jsonObject )
+    {
+		
+		//System.out.println(confirmationToken);
+        ConfirmationToken token = confirmationTokenRepository.findByConfirmationToken(confirmationToken);
+        //System.out.println(token);
+        
+        if(token != null)
+        {
+        	UserDTO userDTO =  userService.getUserByUserName(token.getUsername());
+            userDTO.setPassword(jsonObject.get("password"));  //isEnabled is set to true which means user is verified
+            userService.updateUser(userDTO);   //update user
+           return new ResponseEntity<>("Password changed", HttpStatus.OK);  
+        }
+        else
+        {
+        	return new ResponseEntity<>("The link is invalid or broken", HttpStatus.FORBIDDEN);
+            
+        }
+
+    }
 	
 	
 }
