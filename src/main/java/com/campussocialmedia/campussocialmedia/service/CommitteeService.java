@@ -101,7 +101,7 @@ public class CommitteeService {
         Committee updatedCommitteeObject = committeeRepository.updateCommitteeAboutDetails(originalCommitteeObject);
     }
 
-    public List<String> getCommiteeFollowers(String userName){
+    public List<String> getCommitteeFollowers(String userName){
         return  committeeRepository.getCommitteeFollowers(userName);
     }
 

@@ -95,7 +95,7 @@ public class CommitteeController {
         String userName = jwtUtil.extractUsername(jwt);
 
         try{
-            List<String> committeeFollowers = committeeService.getCommiteeFollowers(userName);
+            List<String> committeeFollowers = committeeService.getCommitteeFollowers(userName);
             return new ResponseEntity<>(committeeFollowers, HttpStatus.OK);
 
         } catch (Exception e) {

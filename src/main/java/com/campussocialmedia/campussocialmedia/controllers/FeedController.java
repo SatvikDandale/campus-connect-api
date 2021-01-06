@@ -21,5 +21,9 @@ public class FeedController {
     public ResponseEntity<?> getFeedForUserName(@PathVariable String userName) {
         return new ResponseEntity<>(feedService.getFeedForUserName(userName), HttpStatus.OK);
     }
-
+    @GetMapping("/feed/committee/{userName}")
+    public ResponseEntity<?> getFeedForCommittee(@PathVariable String userName) {
+        return new ResponseEntity<>(feedService.getFeedForCommittee(userName), HttpStatus.OK);
+    }
+    
 }
