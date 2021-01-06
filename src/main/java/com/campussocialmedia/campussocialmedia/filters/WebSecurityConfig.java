@@ -2,8 +2,14 @@ package com.campussocialmedia.campussocialmedia.filters;
 
 import java.util.Arrays;
 
+import com.campussocialmedia.campussocialmedia.service.MyCommitteeDetailsService;
+// import com.campussocialmedia.campussocialmedia.service.MyCommitteeDetailsService;
+import com.campussocialmedia.campussocialmedia.service.MyUserDetailsService;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -30,10 +36,18 @@ Here we have made the following configurations:
 @EnableWebSecurity
 class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
+	@Qualifier("User")
 	private UserDetailsService myUserDetailsService;
+
+	// @Autowired
+	// @Qualifier("Committee")
+	// private UserDetailsService committeeDetailsService;
+
 	@Autowired
 	private JwtRequestFilter jwtRequestFilter;
-
+	
+	// UserDetailsService myUserDetailsService = new MyUserDetailsService();
+	// UserDetailsService committeeUserDetailsService = new MyCommitteeDetailsService();
 	/*
 	 * This method is used to tell spring security to use our own version of
 	 * UserDetailsService instead of the default UserDetailsService provided by
@@ -42,6 +56,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(myUserDetailsService);
+		// auth.userDetailsService(committeeDetailsService);
 	}
 
 	/*
@@ -65,7 +80,8 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 		httpSecurity.cors().and().csrf().disable().authorizeRequests()
-				.antMatchers("/login", "/signUp", "/addDomainName", "/college/{emailId}", "/user/confirm-account" , "/committee/signUp", "/committee/login", "/committee/confirm-account").permitAll().anyRequest()
+				.antMatchers("/login", "/signUp", "/addDomainName", "/college/{emailId}", "/user/confirm-account", "/committee/signUp", "/committee/login",
+            "/committee/confirm-account").permitAll().anyRequest()
 				.authenticated().and().exceptionHandling().and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		// Asking spring security not to create and manage sessions because we want to
@@ -77,3 +93,4 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 }
+

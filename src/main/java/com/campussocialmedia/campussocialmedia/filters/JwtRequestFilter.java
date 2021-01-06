@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -53,6 +54,7 @@ Throw the above exceptions in this method and handle them separately in another 
 public class JwtRequestFilter extends OncePerRequestFilter {
 
 	@Autowired
+	@Qualifier("User")
 	private MyUserDetailsService userDetailsService;
 
 	@Autowired
