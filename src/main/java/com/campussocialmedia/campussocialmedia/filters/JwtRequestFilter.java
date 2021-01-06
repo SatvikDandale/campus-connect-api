@@ -55,7 +55,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
 	@Autowired
 	@Qualifier("User")
-	private MyUserDetailsService userDetailsService;
+	private MyUserDetailsService  userDetailsService;
 
 	@Autowired
 	private JwtUtil jwtUtil;
@@ -90,6 +90,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 				if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
 					UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+					// System.out.println("inside JwtRequest Filter");
+					// System.out.println(userDetails);
+					
 
 					if (jwtUtil.validateToken(jwt, userDetails)) {
 

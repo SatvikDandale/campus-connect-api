@@ -56,7 +56,7 @@ public class CommitteeController {
         return new ResponseEntity<>(committeeAbout, HttpStatus.OK);
     }
 
-
+    //tested
     @GetMapping("/committee/about")
     public ResponseEntity<?> getCommitteeAbout(@RequestHeader(name = "Authorization") String token) throws SignatureException {
 
