@@ -17,9 +17,19 @@ public class FeedService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private CommitteeService committeeService;
+
     public List<Post> getFeedForUserName(String userName) {
 
         List<String> userNames = userService.getFollowing(userName);
+
+        return postService.findAllPostsByUserNames(userNames, userName);
+
+    }
+    public List<Post> getFeedForCommittee(String userName) {
+
+        List<String> userNames = committeeService.getCommitteeFollowers(userName);
 
         return postService.findAllPostsByUserNames(userNames, userName);
 

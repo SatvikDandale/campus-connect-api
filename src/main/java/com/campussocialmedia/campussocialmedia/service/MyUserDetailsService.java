@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.campussocialmedia.campussocialmedia.entity.CommitteeDTO;
 import com.campussocialmedia.campussocialmedia.entity.UserDTO;
 
 /*
@@ -18,11 +19,16 @@ The job of MyUserDetailsService is to return a User object containing username a
 user whose username is passed or throw UsernameNotFoundException. 
 */
 
-@Service
+@Service("User")
 public class MyUserDetailsService implements UserDetailsService {
 
 	@Autowired
 	private UserService service;
+
+	@Autowired
+	private CommitteeService committeeService;
+
+	private CommitteeDTO committee;
 	
 	private UserDTO user;
 	
@@ -40,11 +46,26 @@ public class MyUserDetailsService implements UserDetailsService {
 		String password;
 
 		try {
+			System.out.println("1");
 			user = service.getUserByUserName(inputUserName);
 			userName = user.getUserName();
 			password = user.getPassword();
-		} catch (UsernameNotFoundException e) {
-			throw new UsernameNotFoundException("User not found", e);
+		} catch (Exception e) {
+			System.out.println("2");
+			try {
+				System.out.println("3");
+				committee = committeeService.getCommitteeByUserName(inputUserName);
+				userName = committee.getUserName();
+				password = committee.getPassword();
+
+				return new User(userName, password, new ArrayList<>());
+				
+
+			} catch (Exception ex) {
+				System.out.println("4");
+				// throw new UsernameNotFoundException("Committee not found", e);
+				throw new UsernameNotFoundException("Profile not found", ex);
+			}
 		}
 
 		//Keeping the user authorities blank

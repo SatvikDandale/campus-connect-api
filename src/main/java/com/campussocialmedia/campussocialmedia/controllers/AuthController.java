@@ -244,8 +244,14 @@ public class AuthController {
 				throws Exception {
 
 			System.out.println(authenticationRequest);
-			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUserName(),
+			try{
+				authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUserName(),
 					authenticationRequest.getPassword()));
+			}catch(Exception e){
+				System.out.println(e.getMessage());
+				return new ResponseEntity<>("Committee credentials could not be authenticated", HttpStatus.NOT_FOUND);
+			}
+			
 			
 			CommitteeAbout committeeAbout = committeeService.getCommitteeAboutByUserName(authenticationRequest.getUserName());
 			if(committeeAbout.isEnabled()) {  //if user is veirfied then only allow to login

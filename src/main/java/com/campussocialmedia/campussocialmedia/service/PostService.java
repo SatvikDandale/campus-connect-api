@@ -78,9 +78,6 @@ public class PostService {
                 return p1.getTimeStamp().compareTo(p2.getTimeStamp()) * -1;
             }
         });
-        for (Post post : posts) {
-            System.out.println(post.getTimeStamp());
-        }
         return posts;
     }
 
