@@ -18,7 +18,8 @@ public class SearchRepository {
 	@Autowired
 	private AmazonDynamoDB client;
 	
-	public List<Map<String, AttributeValue>> searchByUsername(String searchText) {
+	// For User
+	public List<Map<String, AttributeValue>> searchUserByUsername(String searchText) {
 		Map<String, AttributeValue> expressionAttributeValues =
 			    new HashMap<String, AttributeValue>();
 			expressionAttributeValues.put(":val", new AttributeValue(searchText));
@@ -31,7 +32,7 @@ public class SearchRepository {
 		return result.getItems();
 	    
 	}
-	public List<Map<String, AttributeValue>> searchByFirstNameOrLastName(String searchText) {
+	public List<Map<String, AttributeValue>> searchUserByFirstNameOrLastName(String searchText) {
 		
 		Map<String, AttributeValue> expressionAttributeValues =
 			    new HashMap<String, AttributeValue>();
@@ -45,7 +46,7 @@ public class SearchRepository {
 		return result.getItems();
 	}
 	
-	public List<Map<String, AttributeValue>> searchByCollegeName(String searchText) {
+	public List<Map<String, AttributeValue>> searchUserByCollegeName(String searchText) {
 		
 		Map<String, AttributeValue> expressionAttributeValues =
 			    new HashMap<String, AttributeValue>();
@@ -57,6 +58,68 @@ public class SearchRepository {
 	    .withExpressionAttributeValues(expressionAttributeValues);
 		ScanResult result = client.scan(scanRequest);
 		return result.getItems();
+	}
+	
+	//For Committee
+	public List<Map<String, AttributeValue>> searchComitteeByUsername(String searchText) {
+		
+		Map<String, AttributeValue> expressionAttributeValues = new HashMap<String, AttributeValue>();
+		expressionAttributeValues.put(":val", new AttributeValue(searchText));
+		
+		Map<String, String> expressionAttributeNames = new HashMap<String, String>();
+		expressionAttributeNames.put("#n", "name");
+		
+		ScanRequest scanRequest = new ScanRequest()
+	    .withTableName("CommitteeTable")
+	    .withFilterExpression("contains(userName, :val)")
+	    .withProjectionExpression("userName, #n, email, logoUrl")
+	    .withExpressionAttributeValues(expressionAttributeValues)
+	    .withExpressionAttributeNames(expressionAttributeNames);
+		
+		ScanResult result = client.scan(scanRequest);
+		return result.getItems();
+	    
+	}
+	
+	//For Committee
+	public List<Map<String, AttributeValue>> searchComitteeByName(String searchText) {
+		
+		Map<String, AttributeValue> expressionAttributeValues =new HashMap<String, AttributeValue>();
+			expressionAttributeValues.put(":val", new AttributeValue(searchText));
+		Map<String, String> expressionAttributeNames = new HashMap<String, String>();
+		expressionAttributeNames.put("#n", "name");
+		
+		ScanRequest scanRequest = new ScanRequest()
+	    .withTableName("CommitteeTable")
+	    .withFilterExpression("contains(#n, :val)")
+	    .withProjectionExpression("userName, #n, email, logoUrl")
+	    .withExpressionAttributeValues(expressionAttributeValues)
+	    .withExpressionAttributeNames(expressionAttributeNames);
+		
+		ScanResult result = client.scan(scanRequest);
+		return result.getItems();
+	    
+	}
+	
+	//For Committee
+	public List<Map<String, AttributeValue>> searchComitteeByCollegeName(String searchText) {
+		
+		Map<String, AttributeValue> expressionAttributeValues = new HashMap<String, AttributeValue>();
+		expressionAttributeValues.put(":val", new AttributeValue(searchText));
+		
+		Map<String, String> expressionAttributeNames = new HashMap<String, String>();
+		expressionAttributeNames.put("#n", "name");
+		
+		ScanRequest scanRequest = new ScanRequest()
+	    .withTableName("CommitteeTable")
+	    .withFilterExpression("contains(collegeName, :val)")
+	    .withProjectionExpression("userName, #n, email, logoUrl")
+	    .withExpressionAttributeValues(expressionAttributeValues)
+		.withExpressionAttributeNames(expressionAttributeNames);
+		
+		ScanResult result = client.scan(scanRequest);
+		return result.getItems();
+	    
 	}
     
 }

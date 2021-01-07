@@ -12,6 +12,7 @@ public class Committee{
     private String name;
     private String userName;
     private String email;
+    private String collegeName;
     private String password;
     private String bio;
     private String logoUrl;
@@ -21,7 +22,6 @@ public class Committee{
     private List<Long> posts;
     private boolean isEnabled;
     private boolean isCollegeProfile;
-
     public Committee(){
     }
 
@@ -59,6 +59,15 @@ public class Committee{
     }
 
     @DynamoDBAttribute
+    public String getCollegeName() {
+		return collegeName;
+	}
+
+	public void setCollegeName(String collegeName) {
+		this.collegeName = collegeName;
+	}
+
+	@DynamoDBAttribute
     public String getPassword(){
         return password;
     }
@@ -139,30 +148,32 @@ public class Committee{
         this.isCollegeProfile = isCollegeProfile;
     }
 
-    public Committee(String name, String userName, String email, String password, String bio, String logoUrl,
-            List<CommitteeMembers> committeeMembers, List<String> followers, HashMap<String, String> socialLinks,
-            List<Long> posts, boolean isEnabled, boolean isCollegeProfile) {
-        this.name = name;
-        this.userName = userName;
-        this.email = email;
-        this.password = password;
-        this.bio = bio;
-        this.logoUrl = logoUrl;
-        this.committeeMembers = committeeMembers;
-        this.followers = followers;
-        this.socialLinks = socialLinks;
-        this.posts = posts;
-        this.isEnabled = isEnabled;
-        this.isCollegeProfile = isCollegeProfile;
-    }
+	public Committee(String name, String userName, String email, String collegeName, String password, String bio,
+			String logoUrl, List<CommitteeMembers> committeeMembers, List<String> followers,
+			HashMap<String, String> socialLinks, List<Long> posts, boolean isEnabled, boolean isCollegeProfile) {
+		super();
+		this.name = name;
+		this.userName = userName;
+		this.email = email;
+		this.collegeName = collegeName;
+		this.password = password;
+		this.bio = bio;
+		this.logoUrl = logoUrl;
+		this.committeeMembers = committeeMembers;
+		this.followers = followers;
+		this.socialLinks = socialLinks;
+		this.posts = posts;
+		this.isEnabled = isEnabled;
+		this.isCollegeProfile = isCollegeProfile;
+	}
 
-    @Override
-    public String toString() {
-        return "Committee [bio=" + bio + ", committeeMembers=" + committeeMembers + ", email=" + email + ", followers="
-                + followers + ", isCollegeProfile=" + isCollegeProfile + ", isEnabled=" + isEnabled + ", logoUrl="
-                + logoUrl + ", name=" + name + ", password=" + password + ", posts=" + posts + ", socialLinks="
-                + socialLinks + ", userName=" + userName + "]";
-    }
+	@Override
+	public String toString() {
+		return "Committee [name=" + name + ", userName=" + userName + ", email=" + email + ", collegeName="
+				+ collegeName + ", password=" + password + ", bio=" + bio + ", logoUrl=" + logoUrl
+				+ ", committeeMembers=" + committeeMembers + ", followers=" + followers + ", socialLinks=" + socialLinks
+				+ ", posts=" + posts + ", isEnabled=" + isEnabled + ", isCollegeProfile=" + isCollegeProfile + "]";
+	}
 
     
 }

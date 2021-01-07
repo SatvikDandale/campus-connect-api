@@ -15,16 +15,33 @@ public class SearchService {
 	@Autowired
 	private SearchRepository repository;
 	
-	public List<Map<String, AttributeValue>> searchByUsername(String searchText) {
-			return repository.searchByUsername(searchText);
+	public List<Map<String, AttributeValue>> searchUserByUsername(String searchText) {
+			return repository.searchUserByUsername(searchText);
 	}
 
-	public List<Map<String, AttributeValue>> searchByFirstNameOrLastName(String searchText) {
+	public List<Map<String, AttributeValue>> searchUserByFirstNameOrLastName(String searchText) {
 		
-		return repository.searchByFirstNameOrLastName(searchText);
+		return repository.searchUserByFirstNameOrLastName(searchText);
 	}
-	public List<Map<String, AttributeValue>> searchByCollegeName(String searchText) {
+	public List<Map<String, AttributeValue>> searchUserByCollegeName(String searchText) {
 		
-		return repository.searchByCollegeName(searchText);
+		return repository.searchUserByCollegeName(searchText);
 	}
+	
+	public List<Map<String, AttributeValue>> searchCommitteeByUsername(String searchText) {
+		return repository.searchComitteeByUsername(searchText);
+	}
+	
+	public List<Map<String, AttributeValue>> searchCommitteeByName(String searchText) {
+		
+		return repository.searchComitteeByName(searchText);
+	}
+	
+	public List<Map<String, AttributeValue>> searchCommitteeByCollegeName(String searchText) {
+			
+			return repository.searchComitteeByCollegeName(searchText);
+	}
+	
+	
+	
 }
