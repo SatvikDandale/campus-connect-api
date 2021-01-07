@@ -339,7 +339,7 @@ public class AuthController {
 				mailMessage.setSubject("Click the link below to change the Password");
 				mailMessage.setFrom("campus.connect.official1@gmail.com");
 				mailMessage.setText("To confirm your account, please click here :\n" + env.getProperty("frontend-url")
-						+ "/reset-password?token=" + confirmationToken.getConfirmationToken());
+						+ "/#/reset-password/" + confirmationToken.getConfirmationToken());
 				//emailSenderService.sendEmail(mailMessage);
 				// System.out.println("serverURL -> " + System.getenv("serverURL"));
 				// System.out.println("serverURL -> " + env.getProperty("url"));
@@ -368,9 +368,9 @@ public class AuthController {
     public ResponseEntity<?> resetPassword(@RequestParam("token")String confirmationToken,	@RequestBody Map<String, String> jsonObject )
     {
 		
-		//System.out.println(confirmationToken);
+		System.out.println(confirmationToken);
         ConfirmationToken token = confirmationTokenRepository.findByConfirmationToken(confirmationToken);
-        //System.out.println(token);
+        System.out.println(token);
         
         if(token != null)
         {
