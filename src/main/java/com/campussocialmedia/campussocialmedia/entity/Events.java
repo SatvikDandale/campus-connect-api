@@ -10,7 +10,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 
 @DynamoDBTable(tableName = "Events")
 public class Events {
-    private static final long serialVersionUID = 1L;
+    // private static final long serialVersionUID = 1L;
 
     
     //primary index
@@ -66,7 +66,8 @@ public class Events {
 		this.title = title;
 	}
 
-    @DynamoDBIndexHashKey(globalSecondaryIndexName = "UserIndex")
+	// @DynamoDBIndexHashKey(globalSecondaryIndexName = "UserIndex")
+	@DynamoDBAttribute
 	public String getCommitteeUserName() {
 		return committeeUserName;
 	}

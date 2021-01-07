@@ -46,14 +46,14 @@ public class MyUserDetailsService implements UserDetailsService {
 		String password;
 
 		try {
-			System.out.println("1");
+			// System.out.println("1");
 			user = service.getUserByUserName(inputUserName);
 			userName = user.getUserName();
 			password = user.getPassword();
 		} catch (Exception e) {
-			System.out.println("2");
+			// System.out.println("2");
 			try {
-				System.out.println("3");
+				// System.out.println("3");
 				committee = committeeService.getCommitteeByUserName(inputUserName);
 				userName = committee.getUserName();
 				password = committee.getPassword();
