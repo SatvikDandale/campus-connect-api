@@ -19,21 +19,39 @@ public class SearchController {
 	@Autowired
     private SearchService service;
 	
-	@GetMapping("/searchByUserName/{searchText}")
-	public List<Map<String, AttributeValue>> searchByUserName(@PathVariable String searchText) {
-		return service.searchByUsername(searchText);
+	@GetMapping("/searchUserByUserName/{searchText}")
+	public List<Map<String, AttributeValue>> searchUserByUserName(@PathVariable String searchText) {
+		return service.searchUserByUsername(searchText);
 	}
 	
-	@GetMapping("/searchByName/{searchText}")
-	public List<Map<String, AttributeValue>> searchByFirstNameOrLastName(@PathVariable String searchText) {
+	@GetMapping("/searchUserByName/{searchText}")
+	public List<Map<String, AttributeValue>> searchUserByFirstNameOrLastName(@PathVariable String searchText) {
 		
-		return service.searchByFirstNameOrLastName(searchText);
+		return service.searchUserByFirstNameOrLastName(searchText);
 	}
 	
-	@GetMapping("/searchByCollegeName/{searchText}")
-	public List<Map<String, AttributeValue>> searchByCollegeName(@PathVariable String searchText) {
+	@GetMapping("/searchUserByCollegeName/{searchText}")
+	public List<Map<String, AttributeValue>> searchUserByCollegeName(@PathVariable String searchText) {
 		
-		return service.searchByCollegeName(searchText);
+		return service.searchUserByCollegeName(searchText);
 	}
+	
+	@GetMapping("/searchCommitteeByUserName/{searchText}")
+	public List<Map<String, AttributeValue>> searchCommitteeByUserName(@PathVariable String searchText) {
+		return service.searchCommitteeByUsername(searchText);
+	}
+	
+	@GetMapping("/searchCommitteeByName/{searchText}")
+	public List<Map<String, AttributeValue>> searchCommitteeByUsername(@PathVariable String searchText) {
+		
+		return service.searchCommitteeByName(searchText);
+	}
+	
+	@GetMapping("/searchCommitteeByCollegeName/{searchText}")
+	public List<Map<String, AttributeValue>> searchCommitteeByCollegeName(@PathVariable String searchText) {
+		
+		return service.searchCommitteeByCollegeName(searchText);
+	}
+	
 
 }
