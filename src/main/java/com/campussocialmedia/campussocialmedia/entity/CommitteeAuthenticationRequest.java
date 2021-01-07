@@ -1,21 +1,18 @@
 package com.campussocialmedia.campussocialmedia.entity;
 
+import org.springframework.web.multipart.MultipartFile;
+
 //defines input format for incoming committee signup requests
 public class CommitteeAuthenticationRequest {
     private String name;
     private String userName;
     private String email;
     private String password;
+	private MultipartFile image;
 
     public CommitteeAuthenticationRequest() {
     }
 
-    public CommitteeAuthenticationRequest(String name, String userName, String email, String password) {
-        this.name = name;
-        this.userName = userName;
-        this.email = email;
-        this.password = password;
-    }
 
     public String getName() {
         return name;
@@ -49,11 +46,29 @@ public class CommitteeAuthenticationRequest {
         this.password = password;
     }
 
+    public MultipartFile getImage() {
+        return image;
+    }
+
+    public void setImage(MultipartFile image) {
+        this.image = image;
+    }
+
+    public CommitteeAuthenticationRequest(String name, String userName, String email, String password,
+            MultipartFile image) {
+        this.name = name;
+        this.userName = userName;
+        this.email = email;
+        this.password = password;
+        this.image = image;
+    }
+
     @Override
     public String toString() {
-        return "CommitteeAuthenticationRequest [email=" + email + ", name=" + name + ", password=" + password
-                + ", userName=" + userName + "]";
+        return "CommitteeAuthenticationRequest [email=" + email + ", image=" + image + ", name=" + name + ", password="
+                + password + ", userName=" + userName + "]";
     }
+
 
     
 }

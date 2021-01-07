@@ -30,6 +30,9 @@ public class CommitteeService {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private MediaService mediaService;
+
     private CommitteeAbout convertToAbout(Committee committee) {
         return modelMapper.map(committee, CommitteeAbout.class);
     }
@@ -58,13 +61,15 @@ public class CommitteeService {
     }
 
     public void addCommittee(CommitteeAuthenticationRequest authenticationRequest) {
+        String url = mediaService.uploadFile(authenticationRequest.getImage());
+        
         CommitteeDTO user = convertToDTO(authenticationRequest);
         user.setFollowers(new ArrayList<String>());
         user.setBio("-");
         user.setPosts(new ArrayList<>());
         user.setEnabled(false);
         user.setCollegeProfile(false);
-        user.setLogoUrl("-");
+        user.setLogoUrl(url);
         user.setSocialLinks(new HashMap<String, String>());
  
         List<CommitteeMembers> emptylist = Collections.emptyList();

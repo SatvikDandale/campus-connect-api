@@ -110,9 +110,9 @@ public class AuthController {
 				mailMessage.setFrom("campus.connect.official1@gmail.com");
 				mailMessage.setText("To confirm your account, please click here :\n" + env.getProperty("url")
 						+ "/confirm-account?token=" + confirmationToken.getConfirmationToken());
-				// emailSenderService.sendEmail(mailMessage);
+				emailSenderService.sendEmail(mailMessage);
 				System.out.println(System.getenv("serverURL"));
-				emailSenderService.sendSynchronousMail(mailMessage);
+				// emailSenderService.sendSynchronousMail(mailMessage);
 
 				// Now as mail is sent add the user to database
 				UserDTO userDTO = userService.addUser(authenticationRequest);
