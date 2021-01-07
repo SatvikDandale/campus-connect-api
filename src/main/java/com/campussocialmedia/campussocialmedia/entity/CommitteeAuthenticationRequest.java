@@ -9,6 +9,8 @@ public class CommitteeAuthenticationRequest {
     private String email;
     private String password;
 	private MultipartFile image;
+	private String collegeName;
+	private boolean isCollegeProfile;
 
     public CommitteeAuthenticationRequest() {
     }
@@ -53,22 +55,45 @@ public class CommitteeAuthenticationRequest {
     public void setImage(MultipartFile image) {
         this.image = image;
     }
-
-    public CommitteeAuthenticationRequest(String name, String userName, String email, String password,
-            MultipartFile image) {
-        this.name = name;
-        this.userName = userName;
-        this.email = email;
-        this.password = password;
-        this.image = image;
-    }
-
-    @Override
-    public String toString() {
-        return "CommitteeAuthenticationRequest [email=" + email + ", image=" + image + ", name=" + name + ", password="
-                + password + ", userName=" + userName + "]";
-    }
-
-
     
+    public String getCollegeName() {
+		return collegeName;
+	}
+
+
+	public void setCollegeName(String collegeName) {
+		this.collegeName = collegeName;
+	}
+
+	
+	public boolean isCollegeProfile() {
+		return isCollegeProfile;
+	}
+
+
+	public void setCollegeProfile(boolean isCollegeProfile) {
+		this.isCollegeProfile = isCollegeProfile;
+	}
+
+
+	public CommitteeAuthenticationRequest(String name, String userName, String email, String password,
+			MultipartFile image, String collegeName, boolean isCollegeProfile) {
+		super();
+		this.name = name;
+		this.userName = userName;
+		this.email = email;
+		this.password = password;
+		this.image = image;
+		this.collegeName = collegeName;
+		this.isCollegeProfile = isCollegeProfile;
+	}
+
+
+	@Override
+	public String toString() {
+		return "CommitteeAuthenticationRequest [name=" + name + ", userName=" + userName + ", email=" + email
+				+ ", password=" + password + ", image=" + image + ", collegeName=" + collegeName + ", isCollegeProfile="
+				+ isCollegeProfile + "]";
+	}
+
 }

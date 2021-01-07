@@ -68,7 +68,7 @@ public class CommitteeService {
         user.setBio("-");
         user.setPosts(new ArrayList<>());
         user.setEnabled(false);
-        user.setCollegeProfile(false);
+        //user.setCollegeProfile(false);
         user.setLogoUrl(url);
         user.setSocialLinks(new HashMap<String, String>());
  

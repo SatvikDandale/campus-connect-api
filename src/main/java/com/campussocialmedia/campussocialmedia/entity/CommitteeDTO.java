@@ -8,6 +8,7 @@ public class CommitteeDTO {
     private String userName;
     private String email;
     private String password;
+    private String collegeName;
     private String bio;
     private String logoUrl;
     private List<CommitteeMembers> committeeMembers;
@@ -20,14 +21,16 @@ public class CommitteeDTO {
     public CommitteeDTO() {
     }
 
-    public CommitteeDTO(String name, String userName, String email, String password, String bio, String logoUrl,
-			List<CommitteeMembers> committeeMembers, List<String> followers, HashMap<String, String> socialLinks,
-			List<Long> posts, boolean isEnabled, boolean isCollegeProfile) {
+    
+    public CommitteeDTO(String name, String userName, String email, String password, String collegeName, String bio,
+			String logoUrl, List<CommitteeMembers> committeeMembers, List<String> followers,
+			HashMap<String, String> socialLinks, List<Long> posts, boolean isEnabled, boolean isCollegeProfile) {
 		super();
 		this.name = name;
 		this.userName = userName;
 		this.email = email;
 		this.password = password;
+		this.collegeName = collegeName;
 		this.bio = bio;
 		this.logoUrl = logoUrl;
 		this.committeeMembers = committeeMembers;
@@ -37,8 +40,9 @@ public class CommitteeDTO {
 		this.isEnabled = isEnabled;
 		this.isCollegeProfile = isCollegeProfile;
 	}
-    
-    public String getName() {
+
+
+	public String getName() {
         return name;
     }
 
@@ -62,8 +66,16 @@ public class CommitteeDTO {
     public void setUserName(String userName) {
         this.userName = userName;
     }
+    
+    public String getCollegeName() {
+		return collegeName;
+	}
 
-    public String getEmail() {
+	public void setCollegeName(String collegeName) {
+		this.collegeName = collegeName;
+	}
+
+	public String getEmail() {
         return email;
     }
 
@@ -135,13 +147,14 @@ public class CommitteeDTO {
         this.isCollegeProfile = isCollegeProfile;
     }
 
-    @Override
-    public String toString() {
-        return "CommitteeDTO [bio=" + bio + ", committeeMembers=" + committeeMembers + ", email=" + email
-                + ", followers=" + followers + ", isCollegeProfile=" + isCollegeProfile + ", isEnabled=" + isEnabled
-                + ", logoUrl=" + logoUrl + ", name=" + name + ", posts=" + posts + ", socialLinks=" + socialLinks
-                + ", userName=" + userName + "]";
-    }
+	@Override
+	public String toString() {
+		return "CommitteeDTO [name=" + name + ", userName=" + userName + ", email=" + email + ", password=" + password
+				+ ", collegeName=" + collegeName + ", bio=" + bio + ", logoUrl=" + logoUrl + ", committeeMembers="
+				+ committeeMembers + ", followers=" + followers + ", socialLinks=" + socialLinks + ", posts=" + posts
+				+ ", isEnabled=" + isEnabled + ", isCollegeProfile=" + isCollegeProfile + "]";
+	}
 
+    
     
 }

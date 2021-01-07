@@ -62,7 +62,7 @@ public class MyUserDetailsService implements UserDetailsService {
 				
 
 			} catch (Exception ex) {
-				System.out.println("4");
+				//System.out.println("4");
 				// throw new UsernameNotFoundException("Committee not found", e);
 				throw new UsernameNotFoundException("Profile not found", ex);
 			}
