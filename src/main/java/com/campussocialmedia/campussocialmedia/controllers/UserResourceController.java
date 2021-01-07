@@ -29,6 +29,7 @@ import com.campussocialmedia.campussocialmedia.entity.UserAbout;
 import com.campussocialmedia.campussocialmedia.entity.UserDTO;
 import com.campussocialmedia.campussocialmedia.entity.UserFollowerFollowing;
 import com.campussocialmedia.campussocialmedia.exception.ExceptionResponse;
+import com.campussocialmedia.campussocialmedia.service.CommitteeService;
 import com.campussocialmedia.campussocialmedia.service.MediaService;
 import com.campussocialmedia.campussocialmedia.service.UserService;
 import com.campussocialmedia.campussocialmedia.util.JwtUtil;
@@ -44,6 +45,9 @@ public class UserResourceController {
 
 	@Autowired
 	private JwtUtil jwtUtil;
+
+	@Autowired
+	private CommitteeService committeeService;
 
 	@GetMapping("/test")
 	public String testApi() {
@@ -182,7 +186,11 @@ public class UserResourceController {
 
 	@GetMapping("/getProfilePhoto/{userName}")
 	public String getProfilePhotoForUserName(@PathVariable String userName) {
-		return service.getProfilePhotoForUserName(userName);
+		String url = service.getProfilePhotoForUserName(userName);
+		if (url == null) {
+			return committeeService.getProfilePhotoForCommittee(userName);
+		}
+		return url;
 	}
 	
 }

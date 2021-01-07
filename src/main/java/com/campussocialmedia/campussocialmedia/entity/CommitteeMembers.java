@@ -1,5 +1,8 @@
 package com.campussocialmedia.campussocialmedia.entity;
 
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBDocument;
+
+@DynamoDBDocument
 public class CommitteeMembers {
     private String userName;
     private String role;

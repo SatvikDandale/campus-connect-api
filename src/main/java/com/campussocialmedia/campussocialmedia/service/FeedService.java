@@ -29,9 +29,10 @@ public class FeedService {
     }
     public List<Post> getFeedForCommittee(String userName) {
 
-        List<String> userNames = committeeService.getCommitteeFollowers(userName);
-
-        return postService.findAllPostsByUserNames(userNames, userName);
+        // List<String> userNames = committeeService.getCommitteeFollowers(userName);
+        
+        // Committee's news feed is basically their own posts
+        return postService.findPostsByUserName(userName);
 
     }
 

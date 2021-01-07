@@ -45,9 +45,10 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private JwtRequestFilter jwtRequestFilter;
-	
+
 	// UserDetailsService myUserDetailsService = new MyUserDetailsService();
-	// UserDetailsService committeeUserDetailsService = new MyCommitteeDetailsService();
+	// UserDetailsService committeeUserDetailsService = new
+	// MyCommitteeDetailsService();
 	/*
 	 * This method is used to tell spring security to use our own version of
 	 * UserDetailsService instead of the default UserDetailsService provided by
@@ -80,9 +81,9 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 		httpSecurity.cors().and().csrf().disable().authorizeRequests()
-				.antMatchers("/login", "/signUp", "/addDomainName", "/college/{emailId}", "/user/confirm-account", "/committee/signUp", "/committee/login",
-            "/committee/confirm-account").permitAll().anyRequest()
-				.authenticated().and().exceptionHandling().and().sessionManagement()
+				.antMatchers("/login", "/signUp", "/addDomainName", "/college/{emailId}", "/user/confirm-account",
+						"/committee/signUp", "/committee/login", "/committee/confirm-account")
+				.permitAll().anyRequest().authenticated().and().exceptionHandling().and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		// Asking spring security not to create and manage sessions because we want to
 		// use JWT as authentication.
@@ -93,4 +94,3 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 }
-

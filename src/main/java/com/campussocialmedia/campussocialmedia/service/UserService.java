@@ -67,7 +67,7 @@ public class UserService {
 	private UserAbout convertToAbout(UserDBEntity user) {
 		return modelMapper.map(user, UserAbout.class);
 	}
-	
+
 	private UserPasswordEntity convertToPasswordEntity(UserDBEntity user) {
 		return modelMapper.map(user, UserPasswordEntity.class);
 	}
@@ -104,6 +104,22 @@ public class UserService {
 
 		UserDBEntity userEntity = repository.addUser(convertToEntity(user));
 		return convertToDTO(userEntity);
+	}
+
+	public void addFollowing(String follower, String following) {
+		UserDBEntity followerEntity = repository.findUserByUserName(follower);
+		List<String> followingList = followerEntity.getFollowing();
+		followingList.add(following);
+		followerEntity.setFollowing(followingList);
+		repository.updateUser(followerEntity);
+	}
+
+	public void removeFollowing(String follower, String following) {
+		UserDBEntity followerEntity = repository.findUserByUserName(follower);
+		List<String> followingList = followerEntity.getFollowing();
+		followingList.remove(following);
+		followerEntity.setFollowing(followingList);
+		repository.updateUser(followerEntity);
 	}
 
 	public void addFollowerFollowing(String follower, String following, String jwtUserName) {
@@ -171,7 +187,7 @@ public class UserService {
 		UserDTO userDTO = convertToDTO(userDBEntity);
 		return userDTO;
 	}
-	
+
 	public UserPasswordEntity getPasswordEntityUserByUserName(String userName) {
 		UserDBEntity userDBEntity = repository.findUserByUserName(userName);
 		UserPasswordEntity userPasswordEntity = convertToPasswordEntity(userDBEntity);
@@ -202,7 +218,7 @@ public class UserService {
 		UserDBEntity updatedUser = convertToEntity(user, originalUser);
 		updatedUser = repository.updateUserAboutDetails(updatedUser);
 	}
-	
+
 	public void updateUserPassword(String userName, String new_password) {
 		UserDBEntity originalUser = repository.findUserByUserName(userName);
 		originalUser.setPassword(new_password);
@@ -241,15 +257,18 @@ public class UserService {
 
 	public String getProfilePhotoForUserName(String userName) {
 		UserDBEntity user = repository.findUserByUserName(userName);
+		System.out.println(user);
+		if (user == null)
+			return null;
 		return user.getProfilePhotoURL();
 	}
-	
+
 	public UserDTO updateUser(UserDTO userDTO) {
-		//userDBEntity.setEnabled(true);
+		// userDBEntity.setEnabled(true);
 		UserDBEntity userDBEntity = convertToEntity(userDTO);
 		repository.updateUser(userDBEntity);
 		userDTO = convertToDTO(userDBEntity);
 		return userDTO;
 	}
-	
+
 }

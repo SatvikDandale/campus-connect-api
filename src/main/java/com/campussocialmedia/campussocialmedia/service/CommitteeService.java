@@ -3,6 +3,7 @@ package com.campussocialmedia.campussocialmedia.service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import com.campussocialmedia.campussocialmedia.entity.Committee;
@@ -22,6 +23,9 @@ import io.jsonwebtoken.SignatureException;
 public class CommitteeService {
     @Autowired
     private CommitteeRepository committeeRepository;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -109,6 +113,7 @@ public class CommitteeService {
         Committee committee = committeeRepository.findCommitteeByUserName(committeeUserName);
         List<String> currentFollowers = committee.getFollowers();
         currentFollowers.add(followerUserName);
+        userService.addFollowing(followerUserName, committeeUserName);
 
         committeeRepository.updateCommitteeDatabase(committee);   
     }
@@ -116,6 +121,7 @@ public class CommitteeService {
     public boolean removeFollower(String committeeUserName, String followerUserName){
         Committee committee = committeeRepository.findCommitteeByUserName(committeeUserName);
         List<String> currentFollowers = committee.getFollowers();
+        userService.removeFollowing(followerUserName, committeeUserName);
 
         if(currentFollowers.remove(followerUserName)){
             committeeRepository.updateCommitteeDatabase(committee);
@@ -143,15 +149,29 @@ public class CommitteeService {
         Committee committee = committeeRepository.findCommitteeByUserName(userName);
         List<CommitteeMembers> currentMembers = committee.getCommitteeMembers();
 
-        if(currentMembers.remove(committeeMemberObject)){
-            committee.setCommitteeMembers(currentMembers);
-            committeeRepository.updateCommitteeDatabase(committee);
+        currentMembers.removeIf(member -> member.getUserName().equals(committeeMemberObject.getUserName()));
+        System.out.println(currentMembers);
 
-            return true;
-        }
-        else{
-            return false;
-        }
+        committee.setCommitteeMembers(currentMembers);
+        committeeRepository.updateCommitteeDatabase(committee);
+
+        return true;
+
+        // THIS LOGIC DOESN'T WORK
+
+        // if(currentMembers.remove(committeeMemberObject)){
+        //     committee.setCommitteeMembers(currentMembers);
+        //     committeeRepository.updateCommitteeDatabase(committee);
+
+        //     return true;
+        // }
+        // else{
+        //     return false;
+        // }
     }
+    public String getProfilePhotoForCommittee(String userName) {
+		Committee committee = committeeRepository.findCommitteeByUserName(userName);
+		return committee.getLogoUrl();
+	}
 }
 
