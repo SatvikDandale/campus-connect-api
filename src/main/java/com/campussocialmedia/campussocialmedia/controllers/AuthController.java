@@ -202,7 +202,7 @@ public class AuthController {
 	}
 
 	// Verification link for user
-	@RequestMapping(value = "/user/confirm-account", method = { RequestMethod.GET })
+	@RequestMapping(value = "/confirm-account", method = { RequestMethod.GET })
 	public ResponseEntity<?> confirmUserAccount(@RequestParam("token") String confirmationToken) {
 
 		// System.out.println(confirmationToken);
