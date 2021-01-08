@@ -12,6 +12,7 @@ public class CommitteeAbout {
     private String logoUrl;
     private HashMap<String, String> socialLinks;
     private List<CommitteeMembers> committeeMembers;
+    private boolean isCollegeProfile;
 
     public CommitteeAbout(){
     }
@@ -138,17 +139,32 @@ public class CommitteeAbout {
         return this;
     }
 
+    public boolean isCollegeProfile() {
+        return isCollegeProfile;
+    }
+
+    public void setCollegeProfile(boolean isCollegeProfile) {
+        this.isCollegeProfile = isCollegeProfile;
+    }
+
+    public CommitteeAbout(String name, String userName, boolean isEnabled, String email, String bio, String logoUrl,
+            HashMap<String, String> socialLinks, List<CommitteeMembers> committeeMembers, boolean isCollegeProfile) {
+        this.name = name;
+        this.userName = userName;
+        this.isEnabled = isEnabled;
+        this.email = email;
+        this.bio = bio;
+        this.logoUrl = logoUrl;
+        this.socialLinks = socialLinks;
+        this.committeeMembers = committeeMembers;
+        this.isCollegeProfile = isCollegeProfile;
+    }
+
     @Override
     public String toString() {
-        return "{" +
-            " name='" + getName() + "'" +
-            ", userName='" + getUserName() + "'" +
-            ", email='" + getEmail() + "'" +
-            ", bio='" + getBio() + "'" +
-            ", logoUrl='" + getLogoUrl() + "'" +
-            ", socialLinks='" + getSocialLinks() + "'" +
-            ", committeeMembers='" + getCommitteeMembers() + "'" +
-            "}";
+        return "CommitteeAbout [bio=" + bio + ", committeeMembers=" + committeeMembers + ", email=" + email
+                + ", isCollegeProfile=" + isCollegeProfile + ", isEnabled=" + isEnabled + ", logoUrl=" + logoUrl
+                + ", name=" + name + ", socialLinks=" + socialLinks + ", userName=" + userName + "]";
     }
     
 }

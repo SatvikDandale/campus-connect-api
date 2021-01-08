@@ -80,6 +80,19 @@ public class PostService {
         });
         return posts;
     }
+    public List<Post> findAllPostsByUserNames(List<String> userNames) {
+        List<Post> posts = new ArrayList<Post>();
+        for (String userName : userNames) {
+            posts.addAll(this.findPostsByUserName(userName));
+        }
+        Collections.sort(posts, new Comparator<Post>() {
+            @Override
+            public int compare(Post p1, Post p2) {
+                return p1.getTimeStamp().compareTo(p2.getTimeStamp()) * -1;
+            }
+        });
+        return posts;
+    }
 
 
     public void addLikeToPost(String userName, String postID) {

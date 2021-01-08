@@ -45,6 +45,7 @@ public class ReportedPostController {
 		try {
 			Post post = postService.findPostByID(postId);
 			UserDTO userDTO = userService.getUserByUserName(post.getUserName());
+			System.out.println("HELLO");
 			try {
 				ReportDBEntity reportDBEntity = reportService.findReportEntityByCollegeName(userDTO.getCollegeDetails().getCollegeName());
 				
@@ -80,10 +81,10 @@ public class ReportedPostController {
 	@GetMapping("/reportPost/{collegeName}")
 	public ResponseEntity<?> getReportedPost(@PathVariable String collegeName) {
 		
-		ReportDBEntity reportDBEntity = reportService.findReportEntityByCollegeName(collegeName);
-		if(reportDBEntity!=null) {
+		List<Post> posts = reportService.findReportEntityByCollegeNamePosts(collegeName);
+		if(posts.size() != 0) {
 				
-			return new ResponseEntity<>(reportDBEntity, HttpStatus.OK);	
+			return new ResponseEntity<>(posts, HttpStatus.OK);	
 		}
 		else {
 			ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(),
