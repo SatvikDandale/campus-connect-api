@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.campussocialmedia.campussocialmedia.entity.AuthenticationRequest;
 import com.campussocialmedia.campussocialmedia.entity.AuthenticationResponse;
+import com.campussocialmedia.campussocialmedia.entity.CollegeDomainNames;
 import com.campussocialmedia.campussocialmedia.entity.CommitteeAbout;
 import com.campussocialmedia.campussocialmedia.entity.CommitteeAuthenticationRequest;
 import com.campussocialmedia.campussocialmedia.entity.CommitteeAuthenticationResponse;
@@ -42,6 +43,7 @@ import com.campussocialmedia.campussocialmedia.entity.UserDetailsEntity;
 import com.campussocialmedia.campussocialmedia.entity.UserPasswordEntity;
 import com.campussocialmedia.campussocialmedia.exception.ExceptionResponse;
 import com.campussocialmedia.campussocialmedia.repository.ConfirmationTokenRepository;
+import com.campussocialmedia.campussocialmedia.service.CollegeDomainNameService;
 import com.campussocialmedia.campussocialmedia.service.CommitteeService;
 import com.campussocialmedia.campussocialmedia.service.EmailSenderService;
 // import com.campussocialmedia.campussocialmedia.service.MyUserDetailsService;
@@ -75,6 +77,9 @@ public class AuthController {
 
 	@Autowired
 	private EmailSenderService emailSenderService;
+
+	@Autowired
+	private CollegeDomainNameService collegeDomainNameService;
 
 	@Autowired
 	private Environment env;
@@ -166,8 +171,15 @@ public class AuthController {
 				// emailSenderService.sendSynchronousMail(mailMessage);
 				//System.out.println("1");
 				// Now as mail is sent add the user to database
+				
+				if (authenticationRequest.getDomainName() != null) {
+					authenticationRequest.setCollegeProfile(true);
+				}
 				committeeService.addCommittee(authenticationRequest);
-				//System.out.println("2");
+				if (authenticationRequest.getDomainName() != null) {
+					CollegeDomainNames domain = new CollegeDomainNames(authenticationRequest.getCollegeName(), authenticationRequest.getDomainName());
+					collegeDomainNameService.addDomainName(domain);
+				}
 				return new ResponseEntity<>("Registered!! Complete Email Verification",
 						org.springframework.http.HttpStatus.CREATED);
 			} catch (MailSendException ex) {
