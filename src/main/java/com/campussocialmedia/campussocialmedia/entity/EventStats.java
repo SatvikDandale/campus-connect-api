@@ -1,5 +1,8 @@
 package com.campussocialmedia.campussocialmedia.entity;
 
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBDocument;
+
+@DynamoDBDocument
 public class EventStats {
     private String noOfParticipants; //1k+ participants
     private String noOfEvents; //100+ events

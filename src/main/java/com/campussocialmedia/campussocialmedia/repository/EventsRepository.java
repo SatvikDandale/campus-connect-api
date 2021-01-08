@@ -11,11 +11,14 @@ import java.util.Map;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBSaveExpression;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.amazonaws.services.dynamodbv2.model.ExpectedAttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ScanRequest;
 import com.amazonaws.services.dynamodbv2.model.ScanResult;
 import com.campussocialmedia.campussocialmedia.entity.EventAdd;
 import com.campussocialmedia.campussocialmedia.entity.Events;
+import com.campussocialmedia.campussocialmedia.entity.UserDBEntity;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -36,15 +39,8 @@ public class EventsRepository {
     }
 
     public Events addEventRepo(Events event){
-        try{
-            // event.setEventID("90");
-            // System.out.println(event);
-            mapper.save(event);
-            return event;
-        } catch(Exception e){
-            System.out.println("Error Adding event in repo");
-            return new Events();
-        }
+        mapper.save(event);
+        return event;
     }
     
 
@@ -98,6 +94,14 @@ public class EventsRepository {
         // All the results
         return events;
     }
+    
+    private DynamoDBSaveExpression buildExpression(Events event) {
+		DynamoDBSaveExpression dynamoDBSaveExpression = new DynamoDBSaveExpression();
+		Map<String, ExpectedAttributeValue> expectedMap = new HashMap<>();
+		expectedMap.put("eventID", new ExpectedAttributeValue(new AttributeValue().withS(event.getEventID())));
+		dynamoDBSaveExpression.setExpected(expectedMap);
+		return dynamoDBSaveExpression;
+	}
 
     
     
