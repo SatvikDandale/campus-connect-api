@@ -141,6 +141,7 @@ public class AuthController {
 	public ResponseEntity<?> committeeSignUp(@ModelAttribute CommitteeAuthenticationRequest authenticationRequest)
 			throws Exception {
 		try {
+			//System.out.println("**");
 			System.out.println(authenticationRequest);
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
 					authenticationRequest.getUserName(), authenticationRequest.getPassword()));
@@ -163,9 +164,10 @@ public class AuthController {
 				// System.out.println("serverURL -> " + System.getenv("serverURL"));
 				// System.out.println("serverURL -> " + env.getProperty("url"));
 				// emailSenderService.sendSynchronousMail(mailMessage);
-
+				//System.out.println("1");
 				// Now as mail is sent add the user to database
 				committeeService.addCommittee(authenticationRequest);
+				//System.out.println("2");
 				return new ResponseEntity<>("Registered!! Complete Email Verification",
 						org.springframework.http.HttpStatus.CREATED);
 			} catch (MailSendException ex) {

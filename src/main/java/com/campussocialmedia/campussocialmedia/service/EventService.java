@@ -43,7 +43,8 @@ public class EventService {
     public Events addEventService(EventAdd event){
         Events convertedEvent = convertToEntity(event);
         // System.out.println(convertedEvent);
-
-        return eventsRepository.addEventRepo(convertedEvent);
+        Events events = eventsRepository.addEventRepo(convertedEvent);
+        return events;
+        		
     }
 }
