@@ -19,35 +19,35 @@ public class SearchController {
 	@Autowired
     private SearchService service;
 	
-	@GetMapping("/searchUserByUserName/{searchText}")
+	@GetMapping("/searchByUserName/{searchText}")
 	public List<Map<String, AttributeValue>> searchUserByUserName(@PathVariable String searchText) {
 		return service.searchUserByUsername(searchText);
 	}
 	
-	@GetMapping("/searchUserByName/{searchText}")
+	@GetMapping("/searchByName/{searchText}")
 	public List<Map<String, AttributeValue>> searchUserByFirstNameOrLastName(@PathVariable String searchText) {
 		
 		return service.searchUserByFirstNameOrLastName(searchText);
 	}
 	
-	@GetMapping("/searchUserByCollegeName/{searchText}")
+	@GetMapping("/searchByCollegeName/{searchText}")
 	public List<Map<String, AttributeValue>> searchUserByCollegeName(@PathVariable String searchText) {
 		
 		return service.searchUserByCollegeName(searchText);
 	}
 	
-	@GetMapping("/searchCommitteeByUserName/{searchText}")
+	@GetMapping("/searchByUserNameCommittee/{searchText}")
 	public List<Map<String, AttributeValue>> searchCommitteeByUserName(@PathVariable String searchText) {
 		return service.searchCommitteeByUsername(searchText);
 	}
 	
-	@GetMapping("/searchCommitteeByName/{searchText}")
+	@GetMapping("/searchByNameCommittee/{searchText}")
 	public List<Map<String, AttributeValue>> searchCommitteeByUsername(@PathVariable String searchText) {
 		
 		return service.searchCommitteeByName(searchText);
 	}
 	
-	@GetMapping("/searchCommitteeByCollegeName/{searchText}")
+	@GetMapping("/searchByCollegeNameCommittee/{searchText}")
 	public List<Map<String, AttributeValue>> searchCommitteeByCollegeName(@PathVariable String searchText) {
 		
 		return service.searchCommitteeByCollegeName(searchText);
